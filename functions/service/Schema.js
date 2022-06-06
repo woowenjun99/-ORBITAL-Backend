@@ -8,9 +8,10 @@ exports.userSchema = new Schema({
   address: String,
   gender: String,
   dob: Number,
+  profilePicRoute: String,
   firebaseUID: {
-    type: String,
     required: true,
+    type: String,
   },
 });
 
