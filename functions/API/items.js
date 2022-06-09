@@ -2,7 +2,6 @@ require("dotenv").config();
 const functions = require("firebase-functions");
 const { connect } = require("mongoose");
 const { getHandler } = require("../handler/items");
-
 const cors = require("cors")({ origin: true });
 
 exports.items = functions
