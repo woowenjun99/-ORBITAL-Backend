@@ -1,8 +1,6 @@
-require("dotenv").config();
+const { connect } = require("mongoose");
 const { postHandler, getHandler, putHandler } = require("../handler/user");
 const functions = require("firebase-functions");
-const { connect } = require("mongoose");
-const cors = require("cors")({ origin: true });
 
 exports.user = functions
   .region("asia-southeast1")
