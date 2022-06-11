@@ -28,6 +28,7 @@ exports.getHandler = async (req) => {
   try {
     const userID = req.query.user;
 
+    // Checks if the request is valid
     if (!userID) {
       return { status: 404, message: "Invalid request" };
     }
@@ -38,11 +39,11 @@ exports.getHandler = async (req) => {
     }
     return { status: 200, message: foundUser };
   } catch (e) {
-    return { status: 500, message: "Something went wrong." };
+    return { status: 500, message: e };
   }
 };
 
-exports.putHandler = async (req, res) => {
+exports.putHandler = async (req) => {
   try {
     const { name, username, postal, phone, firebaseUID, gender, address } =
       req.body;

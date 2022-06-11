@@ -51,29 +51,15 @@ exports.eventSchema = new Schema({
 });
 
 exports.itemSchema = new Schema({
-  id: String,
   createdBy: String,
-  name: {
-    required: true,
-    type: String,
-  },
-  price: {
-    required: true,
-    type: Number,
-    default: 0,
-  },
-  description: {
-    required: true,
-    type: String,
-  },
-  review: Object,
+  name: String,
+  price: Number,
+  description: String,
   typeOfTransaction: String,
   deliveryInformation: String,
-  tags: [{ type: String }],
-  conditionOfItem: String,
   available: Boolean,
-  boardGameID: String,
-  imageUrl: String,
-  currentOwner: { type: String, required: true },
+  currentOwner: String,
   durationOfRent: Number,
+  tags: [String],
+  imageURL: String,
 });

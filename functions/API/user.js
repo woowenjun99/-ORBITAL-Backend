@@ -11,7 +11,7 @@ exports.user = functions
 
       // Modularise my code so that it is testable
       try {
-        await connect(process.env.DB_URL);
+        connect(process.env.DB_URL);
         switch (req.method) {
           case "POST":
             result = await postHandler(req);
