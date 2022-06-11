@@ -8,9 +8,10 @@ exports.userSchema = new Schema({
   address: String,
   gender: String,
   dob: Number,
+  profilePicRoute: String,
   firebaseUID: {
-    type: String,
     required: true,
+    type: String,
   },
 });
 
@@ -47,4 +48,18 @@ exports.eventSchema = new Schema({
   dateStart: Number,
   dateEnd: Number,
   name: { required: true, type: String },
+});
+
+exports.itemSchema = new Schema({
+  createdBy: String,
+  name: String,
+  price: Number,
+  description: String,
+  typeOfTransaction: String,
+  deliveryInformation: String,
+  available: Boolean,
+  currentOwner: String,
+  durationOfRent: Number,
+  tags: [String],
+  imageURL: String,
 });
