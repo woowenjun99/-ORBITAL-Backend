@@ -8,11 +8,7 @@ exports.userSchema = new Schema({
   address: String,
   gender: String,
   dob: Number,
-  profilePicRoute: String,
-  firebaseUID: {
-    required: true,
-    type: String,
-  },
+  firebaseUID: { type: String, required: true },
 });
 
 exports.transactionSchema = new Schema({
@@ -22,32 +18,6 @@ exports.transactionSchema = new Schema({
   nextOwner: { required: true, type: String },
   dateTimeTransacted: { required: true, type: Number },
   rentalPeriod: { required: true, type: Number },
-});
-
-exports.communitySchema = new Schema({
-  id: Number,
-  dateCreated: {
-    type: Number,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  description: { required: true, type: String },
-  imageUrl: String,
-  posts: [{ type: String }],
-  members: [{ type: String }],
-});
-
-exports.eventSchema = new Schema({
-  id: String,
-  members: [{ type: String }],
-  imageUrl: String,
-  leaderboard: [{ type: Map, of: String }],
-  dateStart: Number,
-  dateEnd: Number,
-  name: { required: true, type: String },
 });
 
 exports.itemSchema = new Schema({
@@ -62,4 +32,5 @@ exports.itemSchema = new Schema({
   durationOfRent: Number,
   tags: [String],
   imageURL: String,
+  dateCreated: Number,
 });
