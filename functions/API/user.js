@@ -18,11 +18,11 @@ exports.user = functions
             break;
 
           case "GET":
-            result = await getHandler(req, res);
+            result = await getHandler(req);
             break;
 
           case "PUT":
-            result = await putHandler(req, res);
+            result = await putHandler(req);
             break;
 
           default:

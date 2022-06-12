@@ -1,10 +1,10 @@
 const { Item } = require("../service/Model");
 
-exports.getHandler = async (res) => {
+exports.getHandler = async (req) => {
   try {
     const results = await Item.aggregate([]).limit(10);
-    return res.status(200).json({ message: results });
+    return { status: 200, message: results };
   } catch (e) {
-    return res.status(500).json({ message: e });
+    return { status: 500, message: e.message };
   }
 };

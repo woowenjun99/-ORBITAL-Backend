@@ -10,14 +10,17 @@ exports.items = functions
     cors(req, res, async () => {
       try {
         connect(process.env.DB_URL);
+        let result;
         switch (req.method) {
           case "GET":
-            await getHandler(res);
+            result = await getHandler(req);
             break;
 
           default:
             return res.status(405).json({ message: "No such method" });
         }
+
+        return res.status(result.status).json(result.message);
       } catch (e) {
         return res.status(500).json({ message: e.message });
       }

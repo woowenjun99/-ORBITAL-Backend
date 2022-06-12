@@ -20,7 +20,7 @@ exports.postHandler = async (req) => {
 
     return { status: 200, message: user };
   } catch (e) {
-    return { status: 500, message: e };
+    return { status: 500, message: e.message };
   }
 };
 
@@ -39,7 +39,7 @@ exports.getHandler = async (req) => {
     }
     return { status: 200, message: foundUser };
   } catch (e) {
-    return { status: 500, message: e };
+    return { status: 500, message: e.message };
   }
 };
 
@@ -71,6 +71,6 @@ exports.putHandler = async (req) => {
     await foundUser.save();
     return { status: 200, message: foundUser };
   } catch (e) {
-    return { status: 500, message: "Something went wrong" };
+    return { status: 500, message: e.message };
   }
 };

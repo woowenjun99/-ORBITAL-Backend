@@ -35,7 +35,7 @@ exports.createItem = functions.https.onCall(async (data, context) => {
       durationOfRent: typeOfTransaction === "Rent" ? 7 * 24 * 60 * 60 : 0, // 2 weeks
       tags: tags,
       imageURL: imageURL,
-      dateCreated: Date.now(),
+      timeCreated: Date.now(),
     });
 
     await item.save();
