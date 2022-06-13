@@ -6,28 +6,23 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  
 jobs:
-  # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    
+    ### Set the default working directory to be functions
+    defaults:
+      run:
+        working-directory: ./functions
 
 ### Source: https://github.com/actions/setup-node
     steps:
-
-      
       - uses: actions/checkout@v3
-      - working-directory: ./functions
-      - run: ls -Alh
-      
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: 'npm'
-
-      
-        
       - run: npm ci
       - run: npm test
