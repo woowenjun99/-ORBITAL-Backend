@@ -19,12 +19,12 @@ jobs:
 ### Source: https://github.com/actions/setup-node
     steps:
       - uses: actions/checkout@v3
-      - name: Set up node
-        working-directory: ./functions
-        uses: actions/setup-node@v3
-          with:
-            node-version: 16
-            cache: 'npm'
+      - run: cd functions
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          
       - name: Running npm ci
         working-directory: ./functions
         run: npm ci
