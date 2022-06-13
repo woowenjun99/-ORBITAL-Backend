@@ -9,6 +9,7 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "test": "vitest --run --reporter verbose",
+    "coverage": "vitest run --coverage",
     "test:watch": "vitest"
   },
   "engines": {

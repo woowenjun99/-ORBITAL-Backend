@@ -4,10 +4,6 @@ const cors = require("cors")({ origin: true });
 const { connect } = require("mongoose");
 const { getHandler } = require("../handler/home");
 
-/**
- * Route Name: /home
- * GET: Gets all of the recommended listings sorted by time of posting (Sorted by UNIX timestamp)
- */
 exports.home = functions
   .region("asia-southeast1")
   .https.onRequest((req, res) => {
@@ -25,7 +21,7 @@ exports.home = functions
         }
 
         const { status, message } = result;
-        return res.status(status).json(message);
+        return res.status(status).json({ message: message });
       } catch (e) {
         return res.status(500).json({ message: e.message });
       }

@@ -1,16 +1,14 @@
+require("dotenv").config();
 const { connect } = require("mongoose");
-const { postHandler, getHandler, putHandler } = require("../handler/user");
 const functions = require("firebase-functions");
-const cors = require("cors")({ origin: true });
+const { postHandler, getHandler } = require("../handler/item");
 
-exports.user = functions
+exports.item = functions
   .region("asia-southeast1")
   .https.onRequest((req, res) => {
     cors(req, res, async () => {
-      let result;
-
-      // Modularise my code so that it is testable
       try {
+        let result;
         connect(process.env.DB_URL);
         switch (req.method) {
           case "POST":
@@ -21,12 +19,8 @@ exports.user = functions
             result = await getHandler(req);
             break;
 
-          case "PUT":
-            result = await putHandler(req);
-            break;
-
           default:
-            return res.status(403).json({ error: "No such route" });
+            return res.status(405).json({ message: "No such method" });
         }
 
         const { status, message } = result;

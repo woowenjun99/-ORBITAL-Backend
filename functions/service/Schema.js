@@ -32,5 +32,5 @@ exports.itemSchema = new Schema({
   durationOfRent: Number,
   tags: [String],
   imageURL: String,
-  dateCreated: Number,
+  timeCreated: Number,
 });
