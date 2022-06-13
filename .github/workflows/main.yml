@@ -16,14 +16,15 @@ jobs:
 
 ### Source: https://github.com/actions/setup-node
     steps:
+      - run: cd functions
+      
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: 'npm'
 
-      - name: CD to the functions folder
-        run: cd functions
+      
         
       - run: npm ci
       - run: npm test
