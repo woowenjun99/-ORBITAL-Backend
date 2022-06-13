@@ -16,6 +16,7 @@ jobs:
 
 ### Source: https://github.com/actions/setup-node
     steps:
+      - run: ls -Alh
       - run: cd functions
       
       - uses: actions/checkout@v3
