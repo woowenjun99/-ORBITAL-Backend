@@ -13,13 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     
     ### Set the default working directory to be functions
+    defaults:
+      run:
+        working-directory: ./functions
 
         
 
 ### Source: https://github.com/actions/setup-node
+### Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
     steps:
       - uses: actions/checkout@v3
-      - run: cd functions
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -27,6 +30,6 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
           
       - name: Running npm ci
-        working-directory: ./functions
         run: npm ci
-
+        
+      - run: npm run test
