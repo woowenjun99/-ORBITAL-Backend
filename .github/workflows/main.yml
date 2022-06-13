@@ -1,37 +1,35 @@
 name: Continuous Integration
 
 on:
-### Runs this workflow whenever I push changes to the master branch
-  push:
-    branches: [ "master" ]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  
+  ### Runs this workflow whenever I push changes to the master branch
+  push:
+    branches: ["master"]
+  pull_request:
+
 jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    
+
     defaults:
       run:
-### As my package-lock.json is within the functions directory,
-### I would need to set it as my working directory.
+        ### As my package-lock.json is within the functions directory,
+        ### I would need to set it as my working directory.
         working-directory: ./functions
 
-        
-
-### Source: https://github.com/actions/setup-node
-### Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
+    ### Source: https://github.com/actions/setup-node
+    ### Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: "npm"
-          cache-dependency-path: '**/package-lock.json'
-          
+          cache-dependency-path: "**/package-lock.json"
+
       - name: Running npm ci
         run: npm ci
-        
+
       - run: npm run test
