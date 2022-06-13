@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     
     ### Set the default working directory to be functions
-    defaults:
-      run:
-        working-directory: ./functions
+
+        
 
 ### Source: https://github.com/actions/setup-node
     steps:
       - uses: actions/checkout@v3
+      - working-directory: ./functions
       - uses: actions/setup-node@v3
         with:
           node-version: 16
