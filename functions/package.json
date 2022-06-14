@@ -15,7 +15,7 @@
   "engines": {
     "node": "16"
   },
-  "main": "function.js",
+  "main": "index.js",
   "dependencies": {
     "c8": "^7.11.3",
     "cors": "^2.8.5",
