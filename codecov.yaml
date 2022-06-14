@@ -1,7 +1,21 @@
 codecov:
   require_ci_to_pass: yes
 
+# https://docs.codecov.com/docs/commit-status
 coverage:
-  precision: 5
-  round: down
-  range: "70...100"
+  status:
+    project:
+      default:
+        # Choose a minimum coverage ratio that the commit must meet to be considered a success
+        target: 70%
+        threshold: 0%
+        flags: 
+          - unit
+        paths: 
+          - "src"
+       # advanced settings
+        branches: 
+          - main
+        if_ci_failed: error #success, failure, error, ignore
+        informational: false
+        only_pulls: false
