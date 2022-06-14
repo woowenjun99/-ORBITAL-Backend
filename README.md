@@ -7,13 +7,18 @@ This is the backend of the application for the Team Neigh. This repository is cr
 3. Service (Consists of Mongoose Models and Schemas)
 4. Handlers for API
 
-## Setup the environment for testing (For future reference)
+## Continuous Integration
+In my GitHUb repository, I will be focusing on the code coverage for the Continuous Integration aspect of it.
+In the Continuous Deployment aspect, I will be focusing on automated deployment to the Google Cloud Functions.
+
+### Setup the environment for testing (For future reference)
 
 1. Install vitest, vite and c8 inside of the working directory.
 2. Add in a vite.config.ts file inside of the functions directory (i.e. working directory)
 3. In package.json, change it to "vitest --run --reporter verbose --coverage --config ./vite.config.ts"
+4. Everything should be configured. Write some tests and run npm run test.
 
-## Setup the codecov
+### Setup the codecov
 
 Source: https://docs.codecov.com/docs/codecov-uploader
 

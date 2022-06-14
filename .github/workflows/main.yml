@@ -32,8 +32,12 @@ jobs:
       - name: Running npm ci
         run: npm ci
 
+      ### Run the test that I have configured in package.json
       - name: Running Tests
         run: npm run test
-
+      
+      ### Uploads the data onto code coverage. There is no need for a
+      ### token as this repository is public.
       - uses: codecov/codecov-action@81cd2dc8148241f03f5839d295e000b8f761e378
       - uses: codecov/codecov-action@v3.1.0
+
