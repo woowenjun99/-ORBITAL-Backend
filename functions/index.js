@@ -11,8 +11,3 @@ exports.item = item;
 // Cloud Function for me
 exports.createItem = createItem;
 
-exports.gcpservice = (req, res) => {
-  createRequest(req.body, (statusCode, data) => {
-    res.status(statusCode).send(data);
-  });
-};
