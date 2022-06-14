@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   ### Runs this workflow whenever I push changes to the master branch
   push:
-    branches: ["master"]
+    branches: ["main"]
   pull_request:
 
 jobs:
