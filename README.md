@@ -1,7 +1,5 @@
+[![codecov](https://codecov.io/gh/woowenjun99/work/branch/main/graph/badge.svg?token=kM9iPdOLlW)](https://codecov.io/gh/woowenjun99/work)
 
-      <a href="https://codecov.io/gh/woowenjun99/work">
-        <img src="https://codecov.io/gh/woowenjun99/work/branch/main/graph/badge.svg?token=kM9iPdOLlW"/>
-      </a>
     
 
 # work
