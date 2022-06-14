@@ -40,9 +40,7 @@ jobs:
   job_2:
     name: Continuous Deployment
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./functions
+
     steps:
       - name: Step 1 -- Clone the repository
         uses: actions/checkout@v3
@@ -56,6 +54,6 @@ jobs:
       - name: Step 3 -- Deploy
         uses: "google-github-actions/deploy-cloud-functions@v0"
         with:
-          name: "user"
-          runtime: 'nodejs16'
+          name: user
+          runtime: nodejs16
           entry_point: functions.user
