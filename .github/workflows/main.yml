@@ -1,5 +1,5 @@
-  # Source: https://github.com/actions/setup-node
-  # Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
+# Source: https://github.com/actions/setup-node
+# Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
 name: Continuous Integration
 
 on:
@@ -15,7 +15,7 @@ jobs:
     defaults:
       run:
         working-directory: ./functions
-    steps: 
+    steps:
       - name: Step 1 -- Clone the repository
         uses: actions/checkout@v3
 
@@ -37,8 +37,23 @@ jobs:
         with:
           fail_ci_if_error: true
 
-      - name: Step 5 -- Download the result into an artifact
-        uses: actions/upload-artifact@v3
+  job_2:
+    name: Continuous Deployment
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./functions
+    steps:
+      - name: Step 1 -- Clone the repository
+        uses: actions/checkout@v3
+
+      - name: Step 2 -- Authenticate
+        uses: google-github-actions/auth@v0
         with:
-          name: code-cov
-          path: ../code-cov.txt
+          credentials_json: "${{ secrets.gcp_credentials }}"
+
+      - name: Step 3 -- Deploy
+        uses: "google-github-actions/deploy-cloud-functions@v0"
+        with:
+          name: 'my-function'
+          runtime: 'nodejs16'
