@@ -26,18 +26,18 @@ jobs:
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
 
-      - name: Step 3 -- Install the relevant node modules
-        run: npm ci
+      - name: Step 3 -- NPM build, install and test
+        run: |
+          npm ci
+          npm run build --if-present
+          npm run test
 
-      - name: Step 4 -- Run the test and obtain the code coverage
-        run: npm run test
-
-      - name: Step 5 -- Upload the test results onto codecov
+      - name: Step 4 -- Upload the test results onto codecov
         uses: codecov/codecov-action@v3.1.0
         with:
           fail_ci_if_error: true
 
-      - name: Step 6 -- Download the result into an artifact
+      - name: Step 5 -- Download the result into an artifact
         uses: actions/upload-artifact@v3
         with:
           name: code-cov
