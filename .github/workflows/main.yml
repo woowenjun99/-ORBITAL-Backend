@@ -58,4 +58,4 @@ jobs:
         with:
           name: "user"
           runtime: 'nodejs16'
-          entry_point: "functions.user"
+          entry_point: functions.user
