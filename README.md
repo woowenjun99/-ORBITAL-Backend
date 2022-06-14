@@ -1,3 +1,9 @@
+
+      <a href="https://codecov.io/gh/woowenjun99/work">
+        <img src="https://codecov.io/gh/woowenjun99/work/branch/main/graph/badge.svg?token=kM9iPdOLlW"/>
+      </a>
+    
+
 # work
 
 This is the backend of the application for the Team Neigh. This repository is created using MongoDB and Firebase Cloud Functions. The main entry point of the Cloud Function is <b>index.js</b> which is the root of the functions folder. There are 4 other folders, namely:
