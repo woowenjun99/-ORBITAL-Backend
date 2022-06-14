@@ -9,39 +9,68 @@ on:
   pull_request:
 
 jobs:
-  build:
-    # The type of runner that the job will run on
+  job_1:
+    name: Uploading the code coverage to codecov
     runs-on: ubuntu-latest
-
     defaults:
       run:
-        ### As my package-lock.json is within the functions directory,
-        ### I would need to set it as my working directory.
         working-directory: ./functions
+    steps: 
+      - name: Step 1 -- Clone the repository
+        uses: actions/checkout@v3
 
-    ### Source: https://github.com/actions/setup-node
-    ### Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Step 2 -- Tell the runner we want to use npm 16
+        uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
 
-      - name: Running npm ci
+      - name: Step 3 -- Install the relevant node modules
         run: npm ci
 
-      ### Run the test that I have configured in package.json
-      - name: Running Tests
+      - name: Step 4 -- Run the test and obtain the code coverage
         run: npm run test
-      
-      ### Uploads the data onto code coverage. There is no need for a
-      ### token as this repository is public.
-      - uses: codecov/codecov-action@81cd2dc8148241f03f5839d295e000b8f761e378
-      - uses: codecov/codecov-action@v3.1.0
-        with:
-          fail_ci_if_error: true
 
-      
+      - name: Step 5 -- Upload the test results onto codecov
+        uses: codecov/codecov-action@v3.1.0
+          with:
+            fail_ci_if_error: true
+
+
+
+  ## Job 1: Build the app
+  # build:
+  #   # The type of runner that the job will run on
+  #   runs-on: ubuntu-latest
+
+  #   defaults:
+  #     run:
+  #       ### As my package-lock.json is within the functions directory,
+  #       ### I would need to set it as my working directory.
+  #       working-directory: ./functions
+
+  #   ### Source: https://github.com/actions/setup-node
+  #   ### Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 16
+  #         cache: "npm"
+  #         cache-dependency-path: "**/package-lock.json"
+
+  #     - name: Running npm ci
+  #       run: npm ci
+
+  #     ### Run the test that I have configured in package.json
+  #     - name: Running Tests
+  #       run: npm run test
+
+  #     ### Uploads the data onto code coverage. There is no need for a
+  #     ### token as this repository is public.
+  #     - uses: codecov/codecov-action@81cd2dc8148241f03f5839d295e000b8f761e378
+  #     - uses: codecov/codecov-action@v3.1.0
+  #       with:
+  #         fail_ci_if_error: true
 
