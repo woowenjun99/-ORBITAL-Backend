@@ -1,9 +1,9 @@
+  # Source: https://github.com/actions/setup-node
+  # Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
 name: Continuous Integration
 
 on:
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  ### Runs this workflow whenever I push changes to the master branch
   push:
     branches: ["main"]
   pull_request:
@@ -37,40 +37,8 @@ jobs:
         with:
           fail_ci_if_error: true
 
-
-
-  ## Job 1: Build the app
-  # build:
-  #   # The type of runner that the job will run on
-  #   runs-on: ubuntu-latest
-
-  #   defaults:
-  #     run:
-  #       ### As my package-lock.json is within the functions directory,
-  #       ### I would need to set it as my working directory.
-  #       working-directory: ./functions
-
-  #   ### Source: https://github.com/actions/setup-node
-  #   ### Source: https://stackoverflow.com/questions/68527897/how-to-specifiy-path-for-actions-setup-node-in-github
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 16
-  #         cache: "npm"
-  #         cache-dependency-path: "**/package-lock.json"
-
-  #     - name: Running npm ci
-  #       run: npm ci
-
-  #     ### Run the test that I have configured in package.json
-  #     - name: Running Tests
-  #       run: npm run test
-
-  #     ### Uploads the data onto code coverage. There is no need for a
-  #     ### token as this repository is public.
-  #     - uses: codecov/codecov-action@81cd2dc8148241f03f5839d295e000b8f761e378
-  #     - uses: codecov/codecov-action@v3.1.0
-  #       with:
-  #         fail_ci_if_error: true
-
+      - name: Step 6 -- Download the result into an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-cov
+          path: code-cov.txt
