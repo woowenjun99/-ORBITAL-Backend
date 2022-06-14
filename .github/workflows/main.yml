@@ -63,4 +63,5 @@ jobs:
       - name: Step 4 -- NPM build, install and test
         run: |
           npm ci
+          npm i -g firebase-tools
           firebase deploy
