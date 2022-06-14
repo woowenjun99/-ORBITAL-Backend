@@ -42,6 +42,3 @@ jobs:
           with:
             fail_ci_if_error: true
 
-        - name: Authenticate with google auth
-          uses: google-github-actions/auth@v0
-          with:
