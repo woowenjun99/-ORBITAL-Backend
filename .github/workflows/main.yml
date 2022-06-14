@@ -52,3 +52,4 @@ jobs:
         with:
           name: 'my-function'
           runtime: 'nodejs16'
+          project_id: ${{secrets.PROJECT_ID}}
