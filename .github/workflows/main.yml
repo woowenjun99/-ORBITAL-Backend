@@ -56,5 +56,5 @@ jobs:
       - name: Step 3 -- Deploy
         uses: "google-github-actions/deploy-cloud-functions@v0"
         with:
-          name: 'user'
+          name: 'index'
           runtime: 'nodejs16'
