@@ -40,6 +40,9 @@ jobs:
   job_2:
     name: Continuous Deployment
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./functions
 
     steps:
       - name: Step 1 -- Clone the repository
@@ -49,13 +52,6 @@ jobs:
         uses: "google-github-actions/auth@v0"
         with:
           credentials_json: "${{ secrets.CREDENTIALS }}"
-
-      # - name: Step 3 -- Deploy
-      #   uses: "google-github-actions/deploy-cloud-functions@v0"
-      #   with:
-      #     name: 'index'
-      #     runtime: 'nodejs16'
-      #     entry_point: "index"
 
       - name: Step 3 -- Tell the runner we want to use npm 16
         uses: actions/setup-node@v3
