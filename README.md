@@ -1,4 +1,5 @@
 # work
+
 This is the backend of the application for the Team Neigh. This repository is created using MongoDB and Firebase Cloud Functions. The main entry point of the Cloud Function is <b>index.js</b> which is the root of the functions folder. There are 4 other folders, namely:
 
 1. API (Consists of Cloud Functions created with REST API.)
@@ -6,4 +7,22 @@ This is the backend of the application for the Team Neigh. This repository is cr
 3. Service (Consists of Mongoose Models and Schemas)
 4. Handlers for API
 
-The reason why there are two different types of Cloud Function is because our Frontend Engineer Marcus is slightly slow in progress, so I am handling Cloud Functions via FE using Flutter. 
+## Setup the environment for testing (For future reference)
+
+1. Install vitest, vite and c8 inside of the working directory.
+2. Add in a vite.config.ts file inside of the functions directory (i.e. working directory)
+3. In package.json, change it to "vitest --run --reporter verbose --coverage --config ./vite.config.ts"
+
+## Setup the codecov
+
+Source: https://docs.codecov.com/docs/codecov-uploader
+
+1. Inside of the functions folder, run
+
+```
+curl -Os https://uploader.codecov.io/latest/macos/codecov
+
+chmod +x codecov
+./codecov -t ${CODECOV_TOKEN}
+
+```
