@@ -10,6 +10,32 @@ on:
 
 jobs:
   job_1:
+    name: Continuous Integration (Lint)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./functions
+
+      steps:
+        - name: Step 1 -- Clone the repository
+          uses: actions/checkout@v3
+
+        - name: Step 2 -- Tell the runner we want to use npm 16
+          uses: actions/setup-node@v3
+          with:
+            node-version: 16
+            cache: "npm"
+            cache-dependency-path: "**/package-lock.json"
+
+        - name: Step 3 -- Run NPM ci
+          run: npm ci
+
+        - name: Step 4 -- Enforce Linting
+          uses: wearerequired/lint-action@v2
+          with:
+            eslint: true
+  
+  job_2:
     name: Continuous Integration (Testing)
     runs-on: ubuntu-latest
     defaults:
@@ -36,7 +62,7 @@ jobs:
         with:
           fail_ci_if_error: true
 
-  job_2:
+  job_3:
   # Source: https://github.com/marketplace/actions/github-action-for-firebase
     name: Continuous Deployment
     runs-on: ubuntu-latest
