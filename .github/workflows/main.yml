@@ -53,15 +53,9 @@ jobs:
         with:
           credentials_json: "${{ secrets.CREDENTIALS }}"
 
-      - name: Step 3 -- Tell the runner we want to use npm 16
-        uses: actions/setup-node@v3
+      - name: Step 3 -- Deploy to Firebase
+        uses: "w9jds/firebase-action@master"
         with:
-          node-version: 16
-          cache: "npm"
-          cache-dependency-path: "**/package-lock.json"
-
-      - name: Step 4 -- NPM build, install and test
-        run: |
-          npm ci
-          npm i -g firebase-tools
-          firebase deploy
+          args: deploy
+        env:
+          FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
