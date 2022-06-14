@@ -46,8 +46,14 @@ jobs:
     steps:
       - name: Step 1 -- Clone the repository
         uses: actions/checkout@v3
+      
+      - name: Step 2 -- Authentication
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.CREDENTIALS }}'
 
-      - name: Step 2 -- Deploy
+
+      - name: Step 3 -- Deploy
         uses: "google-github-actions/deploy-cloud-functions@v0"
         with:
           name: 'my-function'
