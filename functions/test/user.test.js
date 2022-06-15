@@ -1,17 +1,87 @@
 // Source: https://stackoverflow.com/questions/49359476/mock-a-function-from-another-file-jest
-import { test, expect, describe } from "vitest";
-import { getHandler, putHandler } from "../handler/user";
+// Source: https://stackoverflow.com/questions/58695989/how-to-mock-mongoose-find-function-in-jest
+import { test, expect, describe, vi } from 'vitest';
+const { User } = require('../service/Model');
+import { getHandler, putHandler } from '../handler/user';
 
-describe("Testing addUser Module", async () => {
-  test("If no user is being passed through, return a status error of 404", async () => {
-    const req = { query: { user: null } };
-    const result = await getHandler(req);
-    expect(result["status"]).toBe(404);
-  });
+describe('postHandler', async () => {});
 
-  test("For putHandler, if no user query is being passed, return a status of 404", async () => {
-    const req = { body: { firebaseUID: null } };
-    const result = await putHandler(req);
-    expect(result["status"]).toBe(400);
-  });
+describe('getHandler', async () => {
+	// Border Case 1: No user found
+	test('If no user is being passed through, return a status error of 404', async () => {
+		const req = { query: { user: null } };
+		const result = await getHandler(req);
+		expect(result['status']).toBe(404);
+	});
+
+	// Border Case 2: A user is found
+	test('If a user is found, return a status of 200', async () => {
+		// Create a mock data
+		User.findOne = vi.fn().mockResolvedValueOnce({
+			_id: '62a08dbac9f1020a25ff6c0a',
+			firebaseUID: '1smVW328GqhX3rrZrzn9SOOCLgw1',
+			__v: 0,
+		});
+
+		const req = { query: { user: '1smVW328GqhX3rrZrzn9SOOCLgw1' } };
+		const result = await getHandler(req);
+		expect(result['status']).toBe(200);
+		vi.resetAllMocks();
+	});
+
+	// Border Case 3: No such user is found
+	test('If no user is found, return a status of 400', async () => {
+		User.findOne = vi.fn().mockResolvedValueOnce(null);
+		const req = { query: { user: '1smVW328GqhX3rrZrzn9SOOCLgw1' } };
+		const result = await getHandler(req);
+		expect(result['status']).toBe(400);
+		expect(result['message']).toBe('No such user');
+	});
+
+	// Border Case 4: If the promise is rejected
+	test('If the promise is rejected, return a status of 500', async () => {
+		User.findOne = vi.fn().mockRejectedValueOnce('Rejected');
+		const req = { query: { user: '1smVW328GqhX3rrZrzn9SOOCLgw1' } };
+		const result = await getHandler(req);
+		expect(result['status']).toBe(500);
+	});
+});
+
+describe('putHandler', () => {
+	test('If firebaseUID is not provided, throw a 400 error', async () => {
+		const req = { body: { firebaseUID: null } };
+		const result = await putHandler(req);
+		expect(result['status']).toBe(400);
+		expect(result['message']).toBe('Invalid request');
+	});
+
+	test('If a user is found and everything is successful, return a 200 status and the user info', async () => {
+		User.findOneAndUpdate = vi.fn().mockResolvedValueOnce({
+			_id: '62a08dbac9f1020a25ff6c0a',
+			firebaseUID: '1smVW328GqhX3rrZrzn9SOOCLgw1',
+			name: 'John',
+			__v: 0,
+		});
+
+		const req = {
+			body: { firebaseUID: '1smVW328GqhX3rrZrzn9SOOCLgw1', name: 'John' },
+		};
+		const result = await putHandler(req);
+		expect(result['status']).toBe(200);
+		expect(result['message']).toStrictEqual({
+			_id: '62a08dbac9f1020a25ff6c0a',
+			firebaseUID: '1smVW328GqhX3rrZrzn9SOOCLgw1',
+			name: 'John',
+			__v: 0,
+		});
+	});
+
+	test('If the findOneAndUpdate fails, return a 500 status', async () => {
+		User.findOneAndUpdate = vi.fn().mockRejectedValueOnce('Failed');
+		const req = {
+			body: { firebaseUID: '1smVW328GqhX3rrZrzn9SOOCLgw1', name: 'John' },
+		};
+		const result = await putHandler(req);
+		expect(result['status']).toBe(500);
+	});
 });
