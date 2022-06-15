@@ -1,7 +1,7 @@
-require("dotenv").config();
-const functions = require("firebase-functions");
-const { Item } = require("../service/Model");
-const { connect } = require("mongoose");
+require('dotenv').config();
+const functions = require('firebase-functions');
+const {Item} = require('../service/Model');
+const {connect} = require('mongoose');
 
 exports.createItem = functions.https.onCall(async (data, context) => {
   try {
@@ -20,7 +20,7 @@ exports.createItem = functions.https.onCall(async (data, context) => {
     const userID = context.auth.uid;
 
     if (userID === undefined || userID === null) {
-      return { success: false, message: "User is not logged in." };
+      return {success: false, message: 'User is not logged in.'};
     }
 
     const item = new Item({
@@ -32,15 +32,15 @@ exports.createItem = functions.https.onCall(async (data, context) => {
       deliveryInformation: deliveryInformation,
       available: true,
       currentOwner: userID,
-      durationOfRent: typeOfTransaction === "Rent" ? 7 * 24 * 60 * 60 : 0, // 2 weeks
+      durationOfRent: typeOfTransaction === 'Rent' ? 604800 : 0, // 2 weeks
       tags: tags,
       imageURL: imageURL,
       timeCreated: Date.now(),
     });
 
     await item.save();
-    return { success: true, message: "Successfully saved item" };
+    return {success: true, message: 'Successfully saved item'};
   } catch (e) {
-    return { success: false, message: e.message };
+    return {success: false, message: e.message};
   }
 });

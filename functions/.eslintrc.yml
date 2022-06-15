@@ -6,4 +6,4 @@ extends:
   - google
 parserOptions:
   ecmaVersion: latest
-rules: {}
+rules: { 'objectsInObjects': true, 'indent': ['error', 'tab'] }
