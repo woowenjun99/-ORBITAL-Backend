@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Step 4 -- Run Lint
-        run: wearerequired/lint-action@v2
+        uses: wearerequired/lint-action@v2
         with:
           eslint: true
 
