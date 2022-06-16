@@ -1,6 +1,4 @@
-[![codecov](https://codecov.io/gh/woowenjun99/work/branch/main/graph/badge.svg?token=kM9iPdOLlW)](https://codecov.io/gh/woowenjun99/work)
-
-    
+[![codecov](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend/branch/main/graph/badge.svg?token=kM9iPdOLlW)](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend)
 
 # work
 
