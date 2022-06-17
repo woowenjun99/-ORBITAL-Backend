@@ -1,11 +1,11 @@
-require("dotenv").config();
-const { connect } = require("mongoose");
-const { getHandler } = require("../handler/history");
-const functions = require("firebase-functions");
-const cors = require("cors")({ origin: true });
+require('dotenv').config();
+const { connect, disconnect } = require('mongoose');
+const functions = require('firebase-functions');
+const cors = require('cors')({ origin: true });
+const { Item } = require('../service/Model');
 
-exports.history = functions
-  .region("asia-southeast1")
+exports.getUserListing = functions
+  .region('asia-southeast1')
   .https.onRequest(async (req, res) => {
     cors(req, res, async () => {
       try {
@@ -13,12 +13,13 @@ exports.history = functions
         let result;
 
         switch (req.method) {
-          case "GET":
-            result = await getHandler(req);
+          case 'GET':
+            const { user } = req.query;
+            result = await this.getUserListing(user);
             break;
 
           default:
-            return res.status(405).json({ message: "Invalid route" });
+            return res.status(405).json({ message: 'Invalid route' });
         }
 
         const { status, message } = result;
@@ -28,3 +29,35 @@ exports.history = functions
       }
     });
   });
+
+/**
+ * Gets a list of items that the user has posted
+ *
+ * @param {String} userID The firebase userid of the logged in user
+ * 
+ * @returns 200 if the user listing can be found, be it empty or not
+ * @throws 401 error if the user's identity is unknown
+ * @throws 404 error if the userID does not exist in the database
+ * @throws 500 error if there is an error looking up in the database
+ */
+exports.getUserListing = async (userID) => {
+  try {
+    if (userID === null || userID === undefined) {
+      return {
+        status: 401,
+        message: 'Unauthorized',
+      };
+    }
+
+    const result = await Item.findOne({ createdBy: userID });
+    if (!result) {
+      return {
+        status: 404,
+        message: 'Not found',
+      };
+    }
+    return { status: 200, message: result };
+  } catch (e) {
+    return { status: 500, message: e.message };
+  }
+};
