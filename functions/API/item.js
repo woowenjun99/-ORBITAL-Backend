@@ -3,6 +3,7 @@ const { connect } = require('mongoose');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const { Item, User } = require('../service/Model');
+const { formParser } = require('../handler/formParser');
 
 exports.item = functions.region('asia-southeast1').https.onRequest((req, res) => {
   cors(req, res, async () => {
@@ -99,7 +100,7 @@ exports.getName = async (uid) => {
 
 exports.uploadListing = async (req) => {
   try {
-    const result = req.body
+    const result = await formParser(req);
     return { status: 200, message: result };
   } catch (e) {
     return { status: 500, message: e.message };
