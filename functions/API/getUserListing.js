@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { connect, disconnect } = require('mongoose');
+const { connect } = require('mongoose');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const { Item } = require('../service/Model');
@@ -15,7 +15,7 @@ exports.getUserListing = functions
         switch (req.method) {
           case 'GET':
             const { user } = req.query;
-            result = await this.getUserListing(user);
+            result = await this.getUserListingFunction(user);
             break;
 
           default:
@@ -34,13 +34,13 @@ exports.getUserListing = functions
  * Gets a list of items that the user has posted
  *
  * @param {String} userID The firebase userid of the logged in user
- * 
+ *
  * @returns 200 if the user listing can be found, be it empty or not
  * @throws 401 error if the user's identity is unknown
  * @throws 404 error if the userID does not exist in the database
  * @throws 500 error if there is an error looking up in the database
  */
-exports.getUserListing = async (userID) => {
+exports.getUserListingFunction = async (userID) => {
   try {
     if (userID === null || userID === undefined) {
       return {

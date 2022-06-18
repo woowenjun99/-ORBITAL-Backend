@@ -1,32 +1,4 @@
 const { Item } = require("../service/Model");
-const Joi = require("joi");
-
-function validateInput(
-  name,
-  description,
-  typeOfTransaction,
-  price,
-  deliveryInformation,
-  firebaseUID
-) {
-  const schema = Joi.object({
-    name: Joi.required(),
-    description: Joi.required(),
-    typeOfTransaction: Joi.required(),
-    price: Joi.number().required(),
-    deliveryInformation: Joi.required(),
-    firebaseUID: Joi.required(),
-  });
-
-  return schema.validate({
-    name: name,
-    description: description,
-    typeOfTransaction: typeOfTransaction,
-    price: price,
-    deliveryInformation: deliveryInformation,
-    firebaseUID: firebaseUID,
-  });
-}
 
 exports.postHandler = async (req) => {
   try {
@@ -79,6 +51,3 @@ exports.postHandler = async (req) => {
   }
 };
 
-exports.getHandler = async (req) => {
-  const tags = req.query;
-};
