@@ -1,7 +1,6 @@
 require('dotenv').config();
 const { connect } = require('mongoose');
 const functions = require('firebase-functions');
-const { postHandler } = require('../handler/item');
 const cors = require('cors')({ origin: true });
 const { Item, User } = require('../service/Model');
 
@@ -12,7 +11,7 @@ exports.item = functions.region('asia-southeast1').https.onRequest((req, res) =>
       connect(process.env.DB_URL);
       switch (req.method) {
         case 'POST':
-          result = await postHandler(req);
+          result = await this.uploadListing(req);
           break;
 
         case 'GET':
@@ -21,7 +20,7 @@ exports.item = functions.region('asia-southeast1').https.onRequest((req, res) =>
           break;
 
         default:
-          return res.status(405).json({ message: 'No such method' });
+          return res.status(405).json({ message: 'Method not allowed' });
       }
 
       const { status, message } = result;
@@ -53,6 +52,7 @@ exports.item = functions.region('asia-southeast1').https.onRequest((req, res) =>
  *  available
  *  currentOwner
  *  durationOfRent
+ *  __v
  *  tags
  *  imageURL
  *  timeCreated
@@ -94,5 +94,14 @@ exports.getName = async (uid) => {
     return username;
   } catch (e) {
     throw new Error(e.message);
+  }
+};
+
+exports.uploadListing = async (req) => {
+  try {
+    const result = req.body
+    return { status: 200, message: result };
+  } catch (e) {
+    return { status: 500, message: e.message };
   }
 };
