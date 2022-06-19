@@ -2,7 +2,8 @@ require('dotenv').config();
 const { connect } = require('mongoose');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
-const { Item, User } = require('../service/Model');
+const { Item } = require('../service/Model');
+const { getName } = require('./item');
 
 /**
  * Cloud Function for a the marketplace
@@ -21,8 +22,8 @@ exports.marketplace = functions
         connect(process.env.DB_URL);
         switch (req.method) {
           case 'GET':
-            const { search } = req.query;
-            result = await this.searchItems(search);
+            const { search, tags } = req.query;
+            result = await this.searchItems(search, tags);
             break;
           default:
             return res.status(405).json({ message: 'Method not allowed' });
@@ -45,29 +46,32 @@ exports.marketplace = functions
  * @throws 500 If there is internal server error
  */
 
-exports.searchItems = async (search) => {
+exports.searchItems = async (search, tags) => {
   try {
-    if (!search) {
-      return { status: 400, message: 'Please provide a search query' };
+    if (!search && !tags) {
+      return { status: 400, message: 'Please provide a search or tag query' };
     }
 
-    const itemResult = await Item.find({ name: new RegExp(search.trim(), 'i') });
-    const userResult = await User.find({
-      $or: [
-        { username: new RegExp(search.trim(), 'i') },
-        { name: new RegExp(search.trim(), 'i') },
-      ],
-    });
+    let itemResult;
+    const tagPipeline = { tags: { $all: tags } };
+    const searchPipeline = { name: new RegExp(search.trim(), 'i') };
 
-    if (itemResult.length === 0 && userResult.length === 0) {
+    // If there is only search query
+    if (!tags) {
+      itemResult = await Item.find(searchPipeline);
+    } else if (!search) {
+      itemResult = await Item.find(tagPipeline);
+    } else {
+      itemResult = await Item.find({
+        $and: [searchPipeline, tagPipeline],
+      });
+    }
+
+    if (itemResult.length === 0) {
       return { status: 404, message: 'No results found' };
     }
 
-    const result = {
-      itemResult: itemResult.length === 0 ? null : itemResult,
-      userResult: userResult.length === 0 ? null : userResult,
-    };
-    return { status: 200, message: result };
+    return { status: 200, message: itemResult };
   } catch (e) {
     return { status: 500, message: e.message };
   }
