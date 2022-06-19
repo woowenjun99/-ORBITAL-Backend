@@ -5,16 +5,20 @@ const cors = require('cors')({ origin: true });
 const { Item, User } = require('../service/Model');
 const { formParser } = require('../handler/formParser');
 
+/**
+ * Cloud Function for a single item
+ * 
+ * @param {Object} req The request body that is similar to Express
+ * @param {Object} res The response body that is similar to Express
+ * @returns the corresponding status code and message from the individual
+ * handler. 
+ */
 exports.item = functions.region('asia-southeast1').https.onRequest((req, res) => {
   cors(req, res, async () => {
     try {
       let result;
       connect(process.env.DB_URL);
       switch (req.method) {
-        case 'POST':
-          result = await this.uploadListing(req);
-          break;
-
         case 'GET':
           const { id } = req.query;
           result = await this.findItemByID(id);
@@ -98,11 +102,3 @@ exports.getName = async (uid) => {
   }
 };
 
-exports.uploadListing = async (req) => {
-  try {
-    const result = await formParser(req);
-    return { status: 200, message: result };
-  } catch (e) {
-    return { status: 500, message: e.message };
-  }
-};
