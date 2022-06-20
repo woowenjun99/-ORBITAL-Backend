@@ -3,14 +3,15 @@ const { connect } = require('mongoose');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const { Item, User } = require('../service/Model');
+const Joi = require('joi');
 
 /**
  * Cloud Function for a single item
- * 
+ *
  * @param {Object} req The request body that is similar to Express
  * @param {Object} res The response body that is similar to Express
  * @returns the corresponding status code and message from the individual
- * handler. 
+ * handler.
  */
 exports.item = functions.region('asia-southeast1').https.onRequest((req, res) => {
   cors(req, res, async () => {
@@ -21,6 +22,29 @@ exports.item = functions.region('asia-southeast1').https.onRequest((req, res) =>
         case 'GET':
           const { id } = req.query;
           result = await this.findItemByID(id);
+          break;
+
+        case 'POST':
+          const {
+            name,
+            description,
+            typeOfTransaction,
+            price,
+            deliveryInformation,
+            tags,
+            imageURL,
+            firebaseUID,
+          } = req.body;
+          result = await this.uploadListing(
+            name,
+            description,
+            typeOfTransaction,
+            price,
+            deliveryInformation,
+            tags,
+            imageURL,
+            firebaseUID
+          );
           break;
 
         default:
@@ -101,3 +125,96 @@ exports.getName = async (uid) => {
   }
 };
 
+/**
+ * Used for uploading a listing
+ *
+ * @param {String} name The name of the item
+ * @param {String} description The description of the item
+ * @param {String} typeOfTransaction The type of transaction (Rent / Sell)
+ * @param {Float} price The price of the item
+ * @param {Array} tags The list of tags provided by the user
+ * @param {String} imageURL The url of the image
+ * @param {String} firebaseUID The firebase user id of the user
+ *
+ * @returns 201 (Created) if the listing is successfully posted
+ * @throws 400 (Bad Request) if the input provided is invalid
+ * @throws 401 (Unauthorised) if the firebase uid is not provided
+ * @throws 404 (Not found) If the firebase uid does not belong to anyone
+ * @throws 500 (Internal Server Error) If there is any issue with the database query
+ */
+exports.uploadListing = async (
+  name,
+  description,
+  typeOfTransaction,
+  price,
+  deliveryInformation,
+  tags,
+  imageURL,
+  firebaseUID
+) => {
+  // Check if the input provided is valid
+  if (!firebaseUID) {
+    return { status: 400, message: 'No firebase user id provided' };
+  }
+
+  const { error } = this.validateInput(
+    name,
+    description,
+    typeOfTransaction,
+    deliveryInformation
+  );
+
+  if (error) {
+    return { status: 400, message: error.detail };
+  }
+
+  try {
+    // Checks if the user is valid. We do not want to accept any user id
+    const foundUser = await User.findOne({ firebaseUID: firebaseUID });
+    if (!foundUser) {
+      return { status: 404, message: 'No user found' };
+    }
+
+    const item = new Item({
+      createdBy: firebaseUID,
+      name: name,
+      description: description,
+      typeOfTransaction: typeOfTransaction,
+      price: price,
+      deliveryInformation: deliveryInformation,
+      available: true,
+      imageURL: imageURL === null ? undefined : imageURL,
+      tags: tags,
+      timeCreated: Date.now(),
+      durationOfRent: 7 * 24 * 60 * 60,
+      currentOwner: firebaseUID,
+    });
+
+    await item.save();
+
+    return { status: 200, message: item };
+  } catch (e) {
+    return { status: 500, message: e.message };
+  }
+};
+
+exports.validateInput = (
+  name,
+  description,
+  typeOfTransaction,
+  deliveryInformation
+) => {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    description: Joi.string().required(),
+    typeOfTransaction: Joi.string().required(),
+    deliveryInformation: Joi.string().required(),
+  });
+
+  return schema.validate({
+    name: name,
+    description: description,
+    typeOfTransaction: typeOfTransaction,
+    deliveryInformation: deliveryInformation,
+  });
+};

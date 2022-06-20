@@ -13,20 +13,6 @@ exports.postHandler = async (req) => {
       firebaseUID,
     } = req.body;
 
-    /// Using the JOI package to validate the inputs given by the user
-    const { error } = validateInput(
-      name,
-      description,
-      typeOfTransaction,
-      price,
-      deliveryInformation,
-      firebaseUID
-    );
-
-    if (error) {
-      return { status: 400, message: error.message };
-    }
-
     /// Attempts to update the user
     const item = new Item({
       createdBy: firebaseUID,

@@ -41,6 +41,7 @@ exports.marketplace = functions
  * Used for the search bar in the marketplace page
  *
  * @param {String} search The search query
+ * @param {Array} tags The tag queries
  * @returns 200 A list of documents containing the related search
  * @throws 404 If no such item is found
  * @throws 500 If there is internal server error
