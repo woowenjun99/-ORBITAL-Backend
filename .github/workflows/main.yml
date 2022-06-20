@@ -8,7 +8,7 @@ on:
   # Runs the workflow whenever there is a push to the main branch.
   push:
     branches:
-      - '**'
+      - 'main'
   pull_request:
     branches:
       - 'main'
