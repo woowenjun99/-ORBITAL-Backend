@@ -1,4 +1,3 @@
-const { user } = require('./API/user');
 const { home } = require('./API/home');
 const { item } = require('./API/item');
 const { getUserListing } = require('./API/history');
