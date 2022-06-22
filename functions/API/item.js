@@ -3,7 +3,7 @@ const { connect } = require('mongoose');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const { Item, User } = require('../service/Model');
-const Joi = require('joi');
+const { validateListingFormInputs } = require('./validate_input.service');
 
 /**
  * Cloud Function for a single item
@@ -16,11 +16,11 @@ const Joi = require('joi');
 exports.item = functions.region('asia-southeast1').https.onRequest((req, res) => {
   cors(req, res, async () => {
     try {
-      let result;
+      let result, id;
       connect(process.env.DB_URL);
       switch (req.method) {
         case 'GET':
-          const { id } = req.query;
+          id = req.query.id;
           result = await this.findItemByID(id);
           break;
 
@@ -45,6 +45,11 @@ exports.item = functions.region('asia-southeast1').https.onRequest((req, res) =>
             imageURL,
             firebaseUID
           );
+          break;
+
+        case 'DELETE':
+          id = req.body.id;
+          result = await this.deleteItemByID(id);
           break;
 
         default:
@@ -157,7 +162,7 @@ exports.uploadListing = async (
     return { status: 400, message: 'No firebase user id provided' };
   }
 
-  const { error } = this.validateInput(
+  const { error } = validateListingFormInputs(
     name,
     description,
     typeOfTransaction,
@@ -165,7 +170,7 @@ exports.uploadListing = async (
   );
 
   if (error) {
-    return { status: 400, message: error.detail };
+    return { status: 400, message: 'Bad Request: Issue with input provided' };
   }
 
   try {
@@ -198,23 +203,11 @@ exports.uploadListing = async (
   }
 };
 
-exports.validateInput = (
-  name,
-  description,
-  typeOfTransaction,
-  deliveryInformation
-) => {
-  const schema = Joi.object({
-    name: Joi.string().required(),
-    description: Joi.string().required(),
-    typeOfTransaction: Joi.string().required(),
-    deliveryInformation: Joi.string().required(),
-  });
-
-  return schema.validate({
-    name: name,
-    description: description,
-    typeOfTransaction: typeOfTransaction,
-    deliveryInformation: deliveryInformation,
-  });
-};
+/**
+ *
+ * @param {String} name
+ * @param {String} description
+ * @param {String} typeOfTransaction
+ * @param {String} deliveryInformation
+ * @returns a schema validation
+ */

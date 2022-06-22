@@ -1,3 +1,8 @@
+/**
+ * @author: Wen Jun
+ * 
+ * 
+ */
 const { model } = require('mongoose');
 const { userSchema, transactionSchema, itemSchema } = require('./Schema');
 
