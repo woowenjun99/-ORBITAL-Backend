@@ -4,6 +4,12 @@ const { connect } = require('mongoose');
 const { Item } = require('../service/Model');
 const { validateListingFormInputs } = require('../API/validate_input');
 
+/**
+ * uploadListing Cloud Function
+ * 
+ * @param {Object} data -- Containing the information passed in by the user
+ * @param {Object} context -- Containing the information about the user
+ */
 exports.uploadListing = functions.https.onCall(async (data, context) => {
   try {
     if (!context.auth) return { success: false, message: 'User is not logged in' };
@@ -45,6 +51,20 @@ exports.uploadListing = functions.https.onCall(async (data, context) => {
   }
 });
 
+/**
+ * Saves the form in the database
+ * 
+ * @param {String} name -- The name of the listing
+ * @param {String} description -- The description of the listing
+ * @param {String} typeOfTransaction -- The type of transaction
+ * @param {String} deliveryInformation -- The delivery information
+ * @param {Array} tags -- The tags of the object
+ * @param {String} imageURL -- The url of the image
+ * @param {String} uid -- The Firebase User ID
+ * 
+ * @return Item document if successful
+ * @throws Error if there is an issue saving into the DB
+ */
 exports.uploadDataIntoDatabase = async (
   name,
   description,
