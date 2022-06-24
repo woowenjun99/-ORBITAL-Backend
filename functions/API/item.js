@@ -3,7 +3,7 @@ const { connect } = require('mongoose');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const { Item, User } = require('../service/Model');
-const { validateListingFormInputs } = require('./validate_input.service');
+const { validateListingFormInputs } = require('./validate_input');
 
 /**
  * Cloud Function for a single item
