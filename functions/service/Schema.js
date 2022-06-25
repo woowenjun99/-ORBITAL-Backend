@@ -33,4 +33,5 @@ exports.itemSchema = new Schema({
   tags: [String],
   imageURL: String,
   timeCreated: Number,
+  status: String
 });

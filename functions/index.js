@@ -4,6 +4,7 @@ const { getItemById } = require('./Cloud Functions/getItemById');
 const { getUserListings } = require('./Cloud Functions/getUserListings');
 const { filterAndSearch } = require('./Cloud Functions/filterAndSearch');
 const { uploadListing } = require('./Cloud Functions/uploadListing');
+const { makeTransaction } = require('./Cloud Functions/makeTransaction');
 
 /// HTTP Requests for Marcus
 exports.item = item;
@@ -14,3 +15,4 @@ exports.getItemById = getItemById;
 exports.getUserListings = getUserListings;
 exports.filterAndSearch = filterAndSearch;
 exports.uploadListing = uploadListing;
+exports.makeTransaction = makeTransaction;
