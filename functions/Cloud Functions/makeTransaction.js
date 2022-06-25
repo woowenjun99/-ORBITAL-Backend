@@ -20,8 +20,6 @@ exports.makeTransaction = functions.https.onCall(async (data, context) => {
     const { error, foundItem } = await this.checkValidRequest(uid, item_id);
     if (error) return { success: false, message: error };
 
-    // Step 4: Proceed with transaction request
-    const result = await this.processTransaction(uid, item_id, foundItem);
     return { success: true, message: 'Hi' };
   } catch (e) {
     return { success: false, message: e.message };
@@ -76,6 +74,8 @@ exports.processTransaction = async (uid, item_id, foundItem) => {
   try {
     // Step 2: Start a transaction
     session.startTransaction();
+
+    const transaction = new Transaction();
 
     // Last step: Commit the transaction
     session.commitTransaction();

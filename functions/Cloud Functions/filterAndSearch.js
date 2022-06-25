@@ -7,7 +7,6 @@ exports.filterAndSearch = functions.https.onCall(async (data) => {
   try {
     const { tags, search } = data;
     const results = await this.findItemsInDatabase(tags, search);
-    if (results.length === 0) return { success: false, message: 'No item found' };
     return { success: true, message: results };
   } catch (e) {
     return { success: false, message: e.message };

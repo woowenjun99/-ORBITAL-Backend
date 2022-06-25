@@ -193,7 +193,7 @@ exports.uploadListing = async (
       timeCreated: Date.now(),
       durationOfRent: 7 * 24 * 60 * 60,
       currentOwner: firebaseUID,
-      status: 'available'
+      status: 'available',
     });
 
     await item.save();

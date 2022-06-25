@@ -13,7 +13,6 @@ const { Item } = require('../service/Model');
  */
 exports.getUserListings = functions.https.onCall(async (data, context) => {
   try {
-    
     if (!context.auth) {
       return { success: false, message: 'User is not logged in' };
     }
@@ -39,6 +38,10 @@ exports.findUserItemsFromDatabase = async (uid) => {
   try {
     connect(process.env.DB_URL);
     const results = await Item.find({ createdBy: uid });
+    results.forEach((element) => {
+      element._id = element._id.toString();
+    });
+
     return results;
   } catch (e) {
     throw new Error(e.message);
