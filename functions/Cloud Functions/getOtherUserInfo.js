@@ -3,13 +3,11 @@ const functions = require('firebase-functions');
 const { connect } = require('mongoose');
 const { User, Item } = require('../service/Model');
 
-exports.getUserInfo = functions.https.onCall(async (_, context) => {
-  try {
-    if (!context.auth) {
-      return { success: false, message: 'User is not logged in' };
-    }
+exports.getAnotherUserInfo = functions.https.onCall(async (data) => {
+  const uid = data.uid;
+  if (!uid) return { success: false, message: 'Please provide a uid' };
 
-    const { uid } = context.auth;
+  try {
     const foundUser = await this.findUserInDatabase(uid);
     return { success: true, message: foundUser };
   } catch (e) {
@@ -25,10 +23,11 @@ exports.findUserInDatabase = async (uid) => {
       throw new Error('No user found');
     }
 
-    const foundItems = await Item.find({ uid });
-    if (foundItems) {
-      foundUser.listings = foundItems;
+    const foundItem = await Item.find({ uid });
+    if (foundItem) {
+      foundUser.listings = foundItem;
     }
+
     return foundUser;
   } catch (e) {
     throw new Error(e.message);

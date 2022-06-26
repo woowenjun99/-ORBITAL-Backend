@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const { Item } = require('../service/Model');
-const { validateListingFormInputs } = require('../API/validate_input');
+const { validateListingFormInputs } = require('../service/validate_input');
 const { connectDatabase } = require('../helper/connectDatabase');
 
 /**
@@ -11,7 +11,10 @@ const { connectDatabase } = require('../helper/connectDatabase');
  */
 exports.uploadListing = functions.https.onCall(async (data, context) => {
   try {
-    if (!context.auth) return { success: false, message: 'User is not logged in' };
+    if (!context.auth) {
+      return { success: false, message: 'User is not logged in' };
+    }
+
     const { uid } = context.auth;
 
     const {
@@ -89,7 +92,7 @@ exports.uploadDataIntoDatabase = async (
       timeCreated: Date.now(),
       durationOfRent: 7 * 24 * 60 * 60,
       currentOwner: uid,
-      status: "available"
+      status: 'available',
     });
 
     await item.save();

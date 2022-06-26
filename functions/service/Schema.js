@@ -8,7 +8,9 @@ exports.userSchema = new Schema({
   address: String,
   gender: String,
   dob: Number,
-  firebaseUID: {type: String, required: true},
+  uid: {type: String, required: true},
+  birthday: Number,
+  phone: String
 });
 
 exports.transactionSchema = new Schema({

@@ -11,7 +11,7 @@ const { Item } = require('../service/Model');
  * @throws An issue if the user is not logged in
  * @throws An issue if there is an issue reading from the database
  */
-exports.getUserListings = functions.https.onCall(async (data, context) => {
+exports.getUserListings = functions.https.onCall(async (_, context) => {
   try {
     if (!context.auth) {
       return { success: false, message: 'User is not logged in' };
