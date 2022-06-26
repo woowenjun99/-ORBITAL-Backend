@@ -10,7 +10,8 @@ exports.updateParticularsForm = functions.https.onCall(async (data, context) => 
     }
 
     const { uid } = context.auth;
-    const { name, username, postal, phone, gender, address, birthday } = data;
+    const { name, username, postal, phone, gender, address, birthday, imageURL } =
+      data;
     let result;
 
     const foundUser = this.findUserInDatabase(uid);
@@ -23,7 +24,8 @@ exports.updateParticularsForm = functions.https.onCall(async (data, context) => 
         gender,
         address,
         uid,
-        birthday
+        birthday,
+        imageURL
       );
     } else {
       result = await this.updateFoundUser(
@@ -33,7 +35,8 @@ exports.updateParticularsForm = functions.https.onCall(async (data, context) => 
         phone,
         gender,
         address,
-        birthday
+        birthday,
+        imageURL
       );
     }
     return { success: true, message: result };
@@ -60,7 +63,8 @@ exports.createNewUser = async (
   gender,
   address,
   uid,
-  birthday
+  birthday,
+  imageURL
 ) => {
   try {
     const user = new User({
@@ -72,6 +76,7 @@ exports.createNewUser = async (
       address,
       uid,
       birthday,
+      imageURL,
     });
 
     await user.save();
@@ -89,12 +94,13 @@ exports.updateFoundUser = async (
   phone,
   gender,
   address,
-  birthday
+  birthday,
+  imageURL
 ) => {
   try {
     const foundUser = await User.findOneAndUpdate(
       { uid },
-      { name, username, postal, phone, gender, address, birthday },
+      { name, username, postal, phone, gender, address, birthday, imageURL },
       { new: true }
     );
     return foundUser;

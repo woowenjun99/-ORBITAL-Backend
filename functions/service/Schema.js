@@ -1,4 +1,4 @@
-const {Schema} = require('mongoose');
+const { Schema } = require('mongoose');
 
 exports.userSchema = new Schema({
   name: String,
@@ -8,18 +8,19 @@ exports.userSchema = new Schema({
   address: String,
   gender: String,
   dob: Number,
-  uid: {type: String, required: true},
+  uid: { type: String, required: true },
   birthday: Number,
-  phone: String
+  phone: String,
+  imageURL: String,
 });
 
 exports.transactionSchema = new Schema({
-  boardGameID: {required: true, type: Number},
-  price: {required: true, type: Number},
-  originalOwner: {required: true, type: String},
-  nextOwner: {required: true, type: String},
-  dateTimeTransacted: {required: true, type: Number},
-  rentalPeriod: {required: true, type: Number},
+  boardGameID: { required: true, type: Number },
+  price: { required: true, type: Number },
+  originalOwner: { required: true, type: String },
+  nextOwner: { required: true, type: String },
+  dateTimeTransacted: { required: true, type: Number },
+  rentalPeriod: { required: true, type: Number },
 });
 
 exports.itemSchema = new Schema({
@@ -35,5 +36,5 @@ exports.itemSchema = new Schema({
   tags: [String],
   imageURL: String,
   timeCreated: Number,
-  status: String
+  status: String,
 });

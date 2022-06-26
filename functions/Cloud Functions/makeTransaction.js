@@ -39,7 +39,7 @@ exports.checkValidRequest = async (uid, item_id) => {
     let error = null;
 
     // Step 1: Check whether the user is valid.
-    const foundUser = await User.findOne({ firebaseUID: uid });
+    const foundUser = await User.findOne({ uid });
     if (!foundUser) {
       error = 'No user found. Please fill up the personal particular form';
     }
