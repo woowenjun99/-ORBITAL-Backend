@@ -9,7 +9,7 @@ describe('UploadListing modules', () => {
 
   test('An item should be returned', async () => {
     vi.spyOn(Item.prototype, 'save').mockImplementationOnce(() => Promise.resolve());
-    const connect = vi.fn().mockResolvedValue();
+    const connectDatabase = vi.fn().mockResolvedValue();
     const result = await uploadDataIntoDatabase(
       'Test Item 1',
       'Description',

@@ -35,6 +35,7 @@ exports.uploadListing = functions.https.onCall(async (data, context) => {
     );
 
     if (error) return { success: false, message: error };
+    connectDatabase();
 
     const item = await this.uploadDataIntoDatabase(
       name,
@@ -78,7 +79,6 @@ exports.uploadDataIntoDatabase = async (
   uid
 ) => {
   try {
-    connectDatabase();
     const item = new Item({
       createdBy: uid,
       name: name,
