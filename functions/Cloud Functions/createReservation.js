@@ -3,9 +3,21 @@ const functions = require('firebase-functions');
 const { connect, connection } = require('mongoose');
 const { Item } = require('../service/Model');
 
+/**
+ * Creates a cloud function called createReservation
+ * 
+ * @param {Object} data Contains the item_id
+ * @param {Object} context Contains the user info
+ * @returns True and the foundItem if the whole process is successful
+ * @throws Error if there is several issues
+ *  1. User is not logged in
+ *  2. No item_id is provided
+ *  3. No item with the item_id is found
+ *  4. The item's status is not "available"
+ *  5. The person making the offer is the current owner or the original owner
+ */
 exports.createReservation = functions.https.onCall(async (data, context) => {
   try {
-    // Check whether the user is not logged in.
     if (!context.auth) {
       return { success: false, message: 'User is not logged in.' };
     }
@@ -17,12 +29,10 @@ exports.createReservation = functions.https.onCall(async (data, context) => {
 
     const { uid } = context.auth;
 
-    // Connects the DB if it is not ready
     if (!connection.readyState) {
       connect(process.env.DB_URL);
     }
 
-    // Validate the item and see if it is available
     const error = await this.validateItem(item_id, uid);
     if (error) return { success: false, message: error };
 
@@ -39,7 +49,7 @@ exports.createReservation = functions.https.onCall(async (data, context) => {
  *
  * @param {String} item_id of the item
  * @param {String} uid of the person making the offer
- * @returns error if the error conditions are met
+ * @returns Error if the error conditions are met
  */
 exports.validateItem = async (item_id, uid) => {
   try {
@@ -65,14 +75,14 @@ exports.validateItem = async (item_id, uid) => {
  *
  * @param {String} item_id The item_id of the object
  * @returns The updated item
- * @throws An error if there is an issue with updating the database
+ * @throws Error if there is an issue with updating the database
  */
 
 exports.make_reservation = async (item_id) => {
   try {
     const foundItem = await Item.findByIdAndUpdate(
       item_id,
-      { status: 'Offered' },
+      { status: 'Offered', offeredBy: uid },
       { new: true }
     );
 

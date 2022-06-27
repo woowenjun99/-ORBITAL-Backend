@@ -21,6 +21,7 @@ exports.updateItem = functions.https.onCall(async (data, context) => {
     item_id,
   } = data;
 
+  // Reject the request if no
   if (!item_id) return { success: false, message: 'Please provide the item id' };
   try {
     const foundItem = await this.updateItemInDatabase(

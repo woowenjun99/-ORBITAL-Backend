@@ -20,7 +20,7 @@ exports.transactionSchema = new Schema({
   originalOwner: { required: true, type: String },
   nextOwner: { required: true, type: String },
   dateTimeTransacted: { required: true, type: Number },
-  rentalPeriod: { required: true, type: Number },
+  nextAvailablePeriod: { required: true, type: Number },
 });
 
 exports.itemSchema = new Schema({
@@ -36,4 +36,5 @@ exports.itemSchema = new Schema({
   imageURL: String,
   timeCreated: Number,
   status: String,
+  offeredBy: String,
 });

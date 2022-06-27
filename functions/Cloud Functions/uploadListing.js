@@ -93,7 +93,7 @@ exports.uploadDataIntoDatabase = async (
       imageURL: imageURL,
       tags: tags,
       timeCreated: Date.now(),
-      durationOfRent: 7 * 24 * 60 * 60,
+      durationOfRent: typeOfTransaction === 'Rent' ? 7 * 24 * 60 * 60 : null,
       currentOwner: uid,
       status: 'available',
     });

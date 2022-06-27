@@ -20,7 +20,9 @@ exports.makeTransaction = functions.https.onCall(async (data, context) => {
     const { error } = await this.checkValidRequest(uid, item_id);
     if (error) return { success: false, message: error };
 
-    return { success: true, message: 'Hi' };
+    const transaction = await this.processTransaction(uid, item_id);
+
+    return { success: true, message: transaction };
   } catch (e) {
     return { success: false, message: e.message };
   }
@@ -59,6 +61,10 @@ exports.checkValidRequest = async (uid, item_id) => {
     if (foundItem.createdBy === uid) {
       error = 'You cannot purchase your own item.';
     }
+
+    if (foundItem.status !== 'offered') {
+      error = 'No offer was made for this item';
+    }
     return error;
   } catch (e) {
     throw new Error(e.message);
@@ -75,10 +81,34 @@ exports.processTransaction = async (uid, item_id) => {
     // Step 2: Start a transaction
     session.startTransaction();
 
-    const foundItem = await Item.findById(item_id, { session });
+    /** --- foundItem logic --- **/
+    const foundItem = await Item.findById(item_id);
+    if (foundItem.typeOfTransaction === 'Rent') {
+      foundItem.status = 'on-loan';
+    } else {
+      foundItem.status = 'sold';
+    }
+    foundItem.currentOwner = uid;
+    await foundItem.save({ session });
+
+    /** --- Transaction logic --- */
+    const transaction = new Transaction({
+      boardGameID: item_id,
+      price: foundItem.price,
+      originalOwner: foundItem.createdBy,
+      nextOwner: uid,
+      dateTimeTransacted: Date.now(),
+      nextAvailablePeriod:
+        foundItem.typeOfTransaction === 'Rent'
+          ? Date.now() + foundItem.durationOfRent
+          : null,
+    });
+
+    await transaction.save({ session });
 
     // Last step: Commit the transaction
     session.commitTransaction();
+    return transaction;
   } catch (e) {
     await session.abortTransaction();
     throw new Error(e.message);
