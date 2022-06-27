@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, test, vi } from 'vitest';
-import { uploadDataIntoDatabase } from '../../Cloud Functions/uploadListing';
-import { Item } from '../../service/Model';
+import { uploadDataIntoDatabase } from '../Cloud Functions/uploadListing'
+import { Item } from '../service/Model'
 
 describe('UploadListing modules', () => {
   afterAll(() => {
@@ -9,7 +9,6 @@ describe('UploadListing modules', () => {
 
   test('An item should be returned', async () => {
     vi.spyOn(Item.prototype, 'save').mockImplementationOnce(() => Promise.resolve());
-    const connectDatabase = vi.fn().mockResolvedValue();
     const result = await uploadDataIntoDatabase(
       'Test Item 1',
       'Description',

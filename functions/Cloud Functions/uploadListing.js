@@ -1,7 +1,8 @@
+require('dotenv').config();
 const functions = require('firebase-functions');
 const { Item } = require('../service/Model');
 const { validateListingFormInputs } = require('../service/validate_input');
-const { connectDatabase } = require('../helper/connectDatabase');
+const { connect, connection } = require('mongoose');
 
 /**
  * uploadListing Cloud Function
@@ -35,7 +36,9 @@ exports.uploadListing = functions.https.onCall(async (data, context) => {
     );
 
     if (error) return { success: false, message: error };
-    connectDatabase();
+    if (!connection.readyState) {
+      connect(process.env.DB_URL);
+    }
 
     const item = await this.uploadDataIntoDatabase(
       name,

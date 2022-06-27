@@ -17,7 +17,7 @@ exports.makeTransaction = functions.https.onCall(async (data, context) => {
     const { uid } = context.auth;
 
     //Step 3: Check whether the parameters by the user are valid.
-    const { error, foundItem } = await this.checkValidRequest(uid, item_id);
+    const { error } = await this.checkValidRequest(uid, item_id);
     if (error) return { success: false, message: error };
 
     return { success: true, message: 'Hi' };
@@ -59,7 +59,7 @@ exports.checkValidRequest = async (uid, item_id) => {
     if (foundItem.createdBy === uid) {
       error = 'You cannot purchase your own item.';
     }
-    return { foundItem, error };
+    return error;
   } catch (e) {
     throw new Error(e.message);
   }
@@ -68,14 +68,14 @@ exports.checkValidRequest = async (uid, item_id) => {
 /**
  * Used to process the transaction
  */
-exports.processTransaction = async (uid, item_id, foundItem) => {
+exports.processTransaction = async (uid, item_id) => {
   // Step 1: Start the session
   const session = await connection().startSession();
   try {
     // Step 2: Start a transaction
     session.startTransaction();
 
-    const transaction = new Transaction();
+    const foundItem = await Item.findById(item_id, { session });
 
     // Last step: Commit the transaction
     session.commitTransaction();

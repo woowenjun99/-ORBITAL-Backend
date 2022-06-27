@@ -9,6 +9,7 @@ const { updateParticularsForm } = require('./Cloud Functions/updateParticularsFo
 const { updateItem } = require('./Cloud Functions/updateItem');
 const { getAnotherUserInfo } = require('./Cloud Functions/getOtherUserInfo');
 const { getOtherUserListings } = require('./Cloud Functions/getOtherUserListings');
+const { createReservation } = require('./Cloud Functions/createReservation');
 
 // Cloud Functions
 exports.getHomepageListings = getHomepageListings;
@@ -22,3 +23,4 @@ exports.updateParticularsForm = updateParticularsForm;
 exports.updateItem = updateItem;
 exports.getAnotherUserInfo = getAnotherUserInfo;
 exports.getOtherUserListings = getOtherUserListings;
+exports.createReservation = createReservation;

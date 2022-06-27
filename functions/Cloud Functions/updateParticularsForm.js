@@ -2,6 +2,7 @@ require('dotenv').config();
 const functions = require('firebase-functions');
 const { connect } = require('mongoose');
 const { User } = require('../service/Model');
+const { uploadImage } = require('../helper/s3');
 
 exports.updateParticularsForm = functions.https.onCall(async (data, context) => {
   try {
@@ -12,48 +13,24 @@ exports.updateParticularsForm = functions.https.onCall(async (data, context) => 
     const { uid } = context.auth;
     const { name, username, postal, phone, gender, address, birthday, imageURL } =
       data;
-    let result;
 
-    const foundUser = this.findUserInDatabase(uid);
-    if (!foundUser) {
-      result = await this.createNewUser(
-        name,
-        username,
-        postal,
-        phone,
-        gender,
-        address,
-        uid,
-        birthday,
-        imageURL
-      );
-    } else {
-      result = await this.updateFoundUser(
-        name,
-        username,
-        postal,
-        phone,
-        gender,
-        address,
-        birthday,
-        imageURL
-      );
-    }
-    return { success: true, message: result };
+    const user = await this.createNewUser(
+      name,
+      username,
+      postal,
+      phone,
+      gender,
+      address,
+      uid,
+      birthday,
+      imageURL
+    );
+
+    return { success: true, message: user };
   } catch (e) {
     return { success: false, message: e.message };
   }
 });
-
-exports.findUserInDatabase = async (uid) => {
-  try {
-    connect(process.env.DB_URL);
-    const foundUser = await User.findOne({ uid: uid });
-    return foundUser;
-  } catch (e) {
-    throw new Error(e.message);
-  }
-};
 
 exports.createNewUser = async (
   name,
@@ -67,19 +44,39 @@ exports.createNewUser = async (
   imageURL
 ) => {
   try {
-    const user = new User({
-      name,
-      username,
-      postal,
-      phone,
-      gender,
-      address,
-      uid,
-      birthday,
-      imageURL,
-    });
+    connect(process.env.DB_URL);
+    const foundUser = await User.findOne({ uid: uid });
+    let user = undefined;
 
-    await user.save();
+    if (!foundUser) {
+      user = new User({
+        name,
+        username,
+        postal,
+        phone,
+        gender,
+        address,
+        uid,
+        birthday,
+        imageURL,
+      });
+
+      await user.save();
+    } else {
+      foundUser.name = name;
+      foundUser.username = username;
+      foundUser.postal = postal;
+      foundUser.phone = phone;
+      foundUser.gender = gender;
+      foundUser.address = address;
+      foundUser.uid = uid;
+      foundUser.birthday = birthday;
+      foundUser.imageURL = imageURL;
+
+      await foundUser.save();
+      user = foundUser;
+    }
+
     return user;
   } catch (e) {
     throw new Error(e.message);

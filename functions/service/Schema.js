@@ -15,7 +15,7 @@ exports.userSchema = new Schema({
 });
 
 exports.transactionSchema = new Schema({
-  boardGameID: { required: true, type: Number },
+  boardGameID: { required: true, type: String },
   price: { required: true, type: Number },
   originalOwner: { required: true, type: String },
   nextOwner: { required: true, type: String },
@@ -30,7 +30,6 @@ exports.itemSchema = new Schema({
   description: String,
   typeOfTransaction: String,
   deliveryInformation: String,
-  available: Boolean,
   currentOwner: String,
   durationOfRent: Number,
   tags: [String],

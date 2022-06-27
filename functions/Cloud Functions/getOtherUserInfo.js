@@ -25,6 +25,9 @@ exports.findUserInDatabase = async (uid) => {
 
     const foundItem = await Item.find({ uid });
     if (foundItem) {
+      foundItem.forEach((element) => {
+        element._id = element._id.toString();
+      });
       foundUser.listings = foundItem;
     }
 
