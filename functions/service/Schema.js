@@ -10,7 +10,6 @@ exports.userSchema = new Schema({
   dob: Number,
   uid: { type: String, required: true },
   birthday: Number,
-  phone: String,
   imageURL: String,
 });
 
