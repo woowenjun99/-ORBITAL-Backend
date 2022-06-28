@@ -5,12 +5,12 @@ const { Item } = require('../service/Model');
 
 /**
  * Creates a cloud function called createReservation
- * 
+ *
  * Conditions to fulfil:
  * 1. User must be logged in.
  * 2. Data consists of the following parameters:
  * @param {String} item_id The id of the item
- * 
+ *
  * @returns True and the foundItem if the whole process is successful
  * @throws Error if there is several issues
  *  1. User is not logged in
