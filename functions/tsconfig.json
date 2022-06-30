@@ -9,5 +9,6 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": ["src", "**/*.ts"]
+  "include": ["src", "**/*.ts"],
+  "exclude": ["vite.config.ts", "**/*.test.ts", "**/*.spec.ts"]
 }

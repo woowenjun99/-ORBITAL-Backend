@@ -1,26 +1,29 @@
 {
   "name": "functions",
   "scripts": {
-    "lint": "eslint --ext .js,.ts .",
+    "lint": "eslint --ext .js,.ts . --fix",
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "test": "vitest --run --reporter verbose --coverage --config ./vite.config.ts"
   },
   "engines": {
     "node": "16"
   },
-  "eslintignore": [
-    "vite.config.ts",
+  "eslintIgnore": [
+    "**/vite.config.ts",
     "**/*.spec.ts",
     "**/*.test.ts"
   ],
-  "main": "lib/index.js",
+  "main": "lib/src/index.js",
   "dependencies": {
+    "dotenv": "^16.0.1",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.18.0",
+    "joi": "^17.6.0",
     "mongoose": "^6.4.1"
   },
   "devDependencies": {
