@@ -34,7 +34,7 @@ const itemSchema = new Schema<IItem>({
   status: {required: true, type: String, default: "available"},
   offeredBy: String,
   nextAvailableDate: Number,
-  imageURL: {type: String, required: true, default: ""},
+  imageURL: String,
   rentalPeriod: Number,
 });
 
