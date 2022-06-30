@@ -25,5 +25,6 @@ module.exports = {
   rules: {
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
+    "camelcase": [1, {properties: "never"}],
   },
 };

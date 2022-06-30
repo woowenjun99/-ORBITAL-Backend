@@ -1,7 +1,8 @@
-import {Schema, model} from "mongoose";
+import {Schema, model, Types} from "mongoose";
 
 // 1. Creates an interface representing  a document in MongoDB
 export interface IItem {
+  _id: Types.ObjectId | string | undefined;
   createdBy: string;
   name: string;
   price: number;

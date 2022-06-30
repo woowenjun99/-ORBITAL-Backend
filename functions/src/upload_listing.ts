@@ -135,7 +135,7 @@ export const saveItemIntoDatabase = async (
     });
 
     await item.save();
-    return {success: true, message: item};
+    return {success: true, message: "Successfully saved"};
   } catch (e) {
     return {success: false, message: (e as Error).message};
   }

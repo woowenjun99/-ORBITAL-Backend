@@ -1,7 +1,7 @@
 import {IItem} from "../mongoose/item_model";
 
 export type data = {
-  itemId: string;
+  id: string;
 };
 
 export type foundItem = (Document & IItem) | null;
