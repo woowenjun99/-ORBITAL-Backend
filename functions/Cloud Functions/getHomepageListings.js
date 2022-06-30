@@ -47,6 +47,7 @@ exports.getListingsFromDatabase = async (uid) => {
 
     // [NOTE 2] Converts the Hex of the ObjectID to String
     results.forEach((element) => {
+      element.id = JSON.stringify(element._id)
       element._id = element._id.toString();
     });
 

@@ -34,7 +34,7 @@ exports.filterAndSearch = functions.https.onCall(async (data) => {
     }
 
     // Filter the items in the database
-    const results = this.findItemsInDatabase(tags, search);
+    const results = await this.findItemsInDatabase(tags, search);
     return { success: true, message: results };
   } catch (e) {
     return { success: false, message: e.message };
@@ -67,10 +67,6 @@ exports.findItemsInDatabase = async (tags, search) => {
       });
     }
 
-    // Converts all of the ._id to string
-    itemResult.forEach((element) => {
-      element._id = element._id.toString();
-    });
     return itemResult;
   } catch (e) {
     throw new Error(e.message);

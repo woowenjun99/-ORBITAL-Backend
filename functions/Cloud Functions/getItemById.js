@@ -9,6 +9,7 @@ exports.getItemById = functions.https.onCall(async (data) => {
     if (!id) return { success: false, message: 'No id provided' };
     const foundItem = await this.findDatabaseForItem(id);
     if (!foundItem) return { success: false, message: 'No item found' };
+    
     foundItem._id = foundItem._id.toString();
     return { sucess: true, message: foundItem };
   } catch (e) {

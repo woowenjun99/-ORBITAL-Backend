@@ -23,7 +23,6 @@ const Item = new model('items', itemSchema);
  *  5. The person making the offer is the current owner or the original owner
  */
 exports.createReservation = functions
-  .region('asia-southeast1')
   .https.onCall(async (data, context) => {
     try {
       if (!context.auth) {
