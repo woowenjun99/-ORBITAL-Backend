@@ -1,7 +1,9 @@
 require('dotenv').config();
 const functions = require('firebase-functions');
-const { connect, connection } = require('mongoose');
-const { Item } = require('../service/Model');
+const { connect, connection, model } = require('mongoose');
+const { itemSchema } = require('../service/Schema');
+
+const Item = new model('items', itemSchema);
 
 /**
  * Creates the cloud function called filterAndSearch
@@ -32,7 +34,7 @@ exports.filterAndSearch = functions.https.onCall(async (data) => {
     }
 
     // Filter the items in the database
-    const results = await this.findItemsInDatabase(tags, search);
+    const results = this.findItemsInDatabase(tags, search);
     return { success: true, message: results };
   } catch (e) {
     return { success: false, message: e.message };
@@ -41,15 +43,18 @@ exports.filterAndSearch = functions.https.onCall(async (data) => {
 
 /**
  * Filters out the items in the database
- * 
- * @param {Array} tags The tags of the item
- * @param {String} search The name to be queried
- * @returns The list of items found
+ *
+ * @param {Array<string>} tags The tags of the item
+ * @param {string} search The name to be queried
+ * @returns {Array<string>} The list of items found
  */
 exports.findItemsInDatabase = async (tags, search) => {
   try {
     let itemResult;
+    // Pipeline 1: Gets the items that fulfils all of the tags in the req.body
     const tagPipeline = { tags: { $all: tags } };
+
+    // Pipeline 2: Gets the items whose name fulfils all of the tags in the req.body
     const searchPipeline = { name: new RegExp(search.trim(), 'i') };
 
     if (!tags) {
@@ -62,6 +67,10 @@ exports.findItemsInDatabase = async (tags, search) => {
       });
     }
 
+    // Converts all of the ._id to string
+    itemResult.forEach((element) => {
+      element._id = element._id.toString();
+    });
     return itemResult;
   } catch (e) {
     throw new Error(e.message);

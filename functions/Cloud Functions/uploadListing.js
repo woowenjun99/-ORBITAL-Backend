@@ -96,6 +96,8 @@ exports.uploadDataIntoDatabase = async (
       durationOfRent: typeOfTransaction === 'Rent' ? 7 * 24 * 60 * 60 : null,
       currentOwner: uid,
       status: 'available',
+      offeredBy: undefined,
+      nextAvailablePeriod: undefined,
     });
 
     await item.save();

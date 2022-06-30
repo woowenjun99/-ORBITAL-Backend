@@ -36,4 +36,5 @@ exports.itemSchema = new Schema({
   timeCreated: Number,
   status: String,
   offeredBy: String,
+  nextAvailablePeriod: Number,
 });

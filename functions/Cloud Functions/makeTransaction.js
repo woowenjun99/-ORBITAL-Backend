@@ -1,7 +1,12 @@
 require('dotenv').config();
-const { connect, connection } = require('mongoose');
+const { connect, connection, model } = require('mongoose');
 const functions = require('firebase-functions');
-const { Item, User, Transaction } = require('../service/Model');
+const { itemSchema, transactionSchema, userSchema } = require('../service/Schema');
+
+// Creating the Mongoose model here for easy catching
+const Item = new model('items', itemSchema);
+const User = new model('users', userSchema);
+const Transaction = new model('transactions', transactionSchema);
 
 exports.makeTransaction = functions.https.onCall(async (data, context) => {
   try {
@@ -17,7 +22,7 @@ exports.makeTransaction = functions.https.onCall(async (data, context) => {
     const { uid } = context.auth;
 
     //Step 3: Check whether the parameters by the user are valid.
-    const { error } = await this.checkValidRequest(uid, item_id);
+    const error = await this.checkValidRequest(uid, item_id);
     if (error) return { success: false, message: error };
 
     const transaction = await this.processTransaction(uid, item_id);
@@ -49,22 +54,17 @@ exports.checkValidRequest = async (uid, item_id) => {
     // Step 2: Check whether the item is a valid item.
     const foundItem = await Item.findById(item_id);
     if (!foundItem) {
+      // 3. Checks if the item exists
       error = 'No item found';
-    }
-
-    // Step 3: Check whether the item is available or not
-    if (foundItem.status !== 'available') {
-      error = 'The item is currently unavailable.';
-    }
-
-    // Step 4: Check whether the user is transacting his own item
-    if (foundItem.createdBy === uid) {
+    } else if (foundItem.status !== 'offered' && foundItem.offeredBy !== uid) {
+      // 4. Checks whether
+      error = 'You have not made an offer for this item.';
+    } else if (foundItem.createdBy && foundItem.createdBy === uid) {
       error = 'You cannot purchase your own item.';
+    } else if (foundItem.status && foundItem.status !== 'available') {
+      error = 'This item is currently not available.';
     }
 
-    if (foundItem.status !== 'offered') {
-      error = 'No offer was made for this item';
-    }
     return error;
   } catch (e) {
     throw new Error(e.message);
@@ -82,7 +82,7 @@ exports.processTransaction = async (uid, item_id) => {
     session.startTransaction();
 
     /** --- foundItem logic --- **/
-    const foundItem = await Item.findById(item_id);
+    const foundItem = await Item.findById(item_id, { session });
     if (foundItem.typeOfTransaction === 'Rent') {
       foundItem.status = 'on-loan';
     } else {
