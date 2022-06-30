@@ -10,5 +10,11 @@
   },
   "compileOnSave": true,
   "include": ["src", "**/*.ts"],
-  "exclude": ["vite.config.ts", "**/*.test.ts", "**/*.spec.ts"]
+  "exclude": [
+    "vite.config.ts",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "coverage/",
+    "**/types/"
+  ]
 }
