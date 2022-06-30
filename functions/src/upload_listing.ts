@@ -56,11 +56,7 @@ export const uploadListingFunction = region("asia-southeast1").https.onCall(
             uid
         );
 
-        if (!success) {
-          return {success: false, message: message};
-        }
-
-        return {success: true, message: message};
+        return {success, message};
       } catch (e) {
         return {success: false, message: (e as Error).message};
       }
