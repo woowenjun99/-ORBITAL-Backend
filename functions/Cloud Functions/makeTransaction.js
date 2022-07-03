@@ -2,36 +2,57 @@ require('dotenv').config();
 const { connect, connection, model } = require('mongoose');
 const functions = require('firebase-functions');
 const { itemSchema, transactionSchema, userSchema } = require('../service/Schema');
+const cors = require('cors')({ origin: true });
 
 // Creating the Mongoose model here for easy catching
 const Item = new model('items', itemSchema);
 const User = new model('users', userSchema);
 const Transaction = new model('transactions', transactionSchema);
 
-exports.makeTransaction = functions.https.onCall(async (data, context) => {
-  try {
-    // Step 1: Checks whether the user is logged in or not.
-    if (!context.auth) return { success: false, message: 'User is not logged in' };
+exports.makeTransaction = functions
+  .region('asia-southeast1')
+  .https.onRequest((req, res) => {
+    cors(req, res, async () => {
+      if (req.method !== 'POST') {
+        res.status(405).json({ message: 'Method not allowed' });
+        return;
+      }
 
-    // Step 2: Check whether the item_id is provided
-    const item_id = data.item_id;
-    if (!item_id) {
-      return { success: false, message: 'Please provide a valid item id' };
+      const { status, message } = await this.handler(req);
+      res.status(status).json({ message: message });
+    });
+  });
+
+exports.handler = async (req) => {
+  try {
+    // 1. Validate the input provided by the user.
+    const { uid, item_id } = req.body;
+    if (!uid || !item_id) {
+      return { status: 400, message: 'Bad Request' };
     }
 
-    const { uid } = context.auth;
+    // 2. Connect to the database
+    if (!connection.readyState) {
+      connect(process.env.DB_URL);
+    }
 
-    //Step 3: Check whether the parameters by the user are valid.
-    const error = await this.checkValidRequest(uid, item_id);
-    if (error) return { success: false, message: error };
+    // 3. Validates if the item is available for transaction
+    const { status, error } = await this.checkValidRequest(uid, item_id);
+    if (error) {
+      return { status: status, message: error };
+    }
 
+    // 4. Proceeed with the transaction
     const transaction = await this.processTransaction(uid, item_id);
-
-    return { success: true, message: transaction };
+    if (!transaction) {
+      return { status: 404, message: 'Item not found' };
+    }
+    return { status: 200, message: transaction };
   } catch (e) {
-    return { success: false, message: e.message };
+    console.error('ERROR (makeTransaction) :', e.message);
+    return { status: 500, message: e.message };
   }
-});
+};
 
 /**
  * Used to check whether the request is valid
@@ -43,7 +64,8 @@ exports.makeTransaction = functions.https.onCall(async (data, context) => {
 exports.checkValidRequest = async (uid, item_id) => {
   try {
     connect(process.env.DB_URL);
-    let error = null;
+    let error,
+      status = null;
 
     // Step 1: Check whether the user is valid.
     const foundUser = await User.findOne({ uid });
@@ -53,19 +75,33 @@ exports.checkValidRequest = async (uid, item_id) => {
 
     // Step 2: Check whether the item is a valid item.
     const foundItem = await Item.findById(item_id);
+
     if (!foundItem) {
-      // 3. Checks if the item exists
-      error = 'No item found';
-    } else if (foundItem.status !== 'offered' && foundItem.offeredBy !== uid) {
-      // 4. Checks whether
-      error = 'You have not made an offer for this item.';
-    } else if (foundItem.createdBy && foundItem.createdBy === uid) {
+      // Step 3: Item not found.
+      error = 'No item found.';
+      status = 404;
+    } else if (!foundItem.status) {
+      // Step 4: Due to some legacy code, we might have to manually update the status
+      foundItem.status = 'available';
+      await foundItem.save();
+      error = 'Something went wrong. Please try and refresh';
+      status = 400;
+    } else if (foundItem.status === 'available') {
+      // Step 5: No offer had been made for the item yet
+      error = 'No offer had been made for this item yet';
+      status = 400;
+    } else if (foundItem.status === 'offered' && foundItem.offeredBy !== uid) {
+      error = 'Someone had made an offer for this offer.';
+      status: 400;
+    } else if (foundItem.createdBy === uid && foundItem.currentOwner === uid) {
       error = 'You cannot purchase your own item.';
-    } else if (foundItem.status && foundItem.status !== 'available') {
-      error = 'This item is currently not available.';
+      status = 400;
+    } else if (foundItem.status === 'Sold' || foundItem.status === 'Rented') {
+      error = 'This item is already rented out or sold.';
+      status = 400;
     }
 
-    return error;
+    return { status, error };
   } catch (e) {
     throw new Error(e.message);
   }
@@ -76,32 +112,41 @@ exports.checkValidRequest = async (uid, item_id) => {
  */
 exports.processTransaction = async (uid, item_id) => {
   // Step 1: Start the session
-  const session = await connection().startSession();
+  const session = await connection.startSession();
   try {
     // Step 2: Start a transaction
     session.startTransaction();
 
     /** --- foundItem logic --- **/
-    const foundItem = await Item.findById(item_id, { session });
-    if (foundItem.typeOfTransaction === 'Rent') {
-      foundItem.status = 'on-loan';
-    } else {
-      foundItem.status = 'sold';
+    const foundItem = await Item.findById(item_id, null, { session });
+    if (!foundItem) {
+      return null;
     }
+
     foundItem.currentOwner = uid;
+
+    if (foundItem.typeOfTransaction === 'Rent') {
+      if (foundItem.durationOfRent) {
+        foundItem.nextAvailablePeriod = foundItem.nextAvailablePeriod + Date.now();
+      } else {
+        // Set as 2 weeks to default if no n
+        foundItem.durationOfRent = 604800;
+        foundItem.nextAvailablePeriod = 604800 + Date.now();
+      }
+      foundItem.status = 'Rented';
+    } else {
+      foundItem.status = 'Sold';
+    }
+
     await foundItem.save({ session });
 
-    /** --- Transaction logic --- */
     const transaction = new Transaction({
-      boardGameID: item_id,
+      boardGameId: foundItem._id.toString(),
       price: foundItem.price,
       originalOwner: foundItem.createdBy,
       nextOwner: uid,
       dateTimeTransacted: Date.now(),
-      nextAvailablePeriod:
-        foundItem.typeOfTransaction === 'Rent'
-          ? Date.now() + foundItem.durationOfRent
-          : null,
+      nextAvailablePeriod: foundItem.nextAvailablePeriod,
     });
 
     await transaction.save({ session });

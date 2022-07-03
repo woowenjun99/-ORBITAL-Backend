@@ -1,4 +1,4 @@
-const { Schema } = require('mongoose');
+const { Schema, Types } = require('mongoose');
 
 exports.userSchema = new Schema({
   name: String,
@@ -14,12 +14,12 @@ exports.userSchema = new Schema({
 });
 
 exports.transactionSchema = new Schema({
-  boardGameID: { required: true, type: String },
+  boardGameId: { required: true, type: String },
   price: { required: true, type: Number },
   originalOwner: { required: true, type: String },
   nextOwner: { required: true, type: String },
   dateTimeTransacted: { required: true, type: Number },
-  nextAvailablePeriod: { required: true, type: Number },
+  nextAvailablePeriod: Number,
 });
 
 exports.itemSchema = new Schema({

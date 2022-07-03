@@ -10,6 +10,9 @@ const { getAnotherUserInfo } = require('./Cloud Functions/getOtherUserInfo');
 const { getOtherUserListings } = require('./Cloud Functions/getOtherUserListings');
 const { createReservation } = require('./Cloud Functions/createReservation');
 const { makeTransaction } = require('./Cloud Functions/makeTransaction');
+const {
+  getUnavailableListings,
+} = require('./Cloud Functions/getUnavailaleListings');
 
 // Cloud Functions
 exports.getHomepageListings = getHomepageListings;
@@ -23,4 +26,5 @@ exports.updateItem = updateItem;
 exports.getAnotherUserInfo = getAnotherUserInfo;
 exports.getOtherUserListings = getOtherUserListings;
 exports.createReservation = createReservation;
+exports.getUnavailableListings = getUnavailableListings;
 exports.makeTransaction = makeTransaction;
