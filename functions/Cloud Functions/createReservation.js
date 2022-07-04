@@ -17,34 +17,33 @@ const Item = new model('items', itemSchema);
  *  4. The item's status is not "available"
  *  5. The person making the offer is the current owner or the original owner
  */
-exports.createReservation = functions
-  .https.onCall(async (data, context) => {
-    try {
-      if (!context.auth) {
-        return { success: false, message: 'User is not logged in.' };
-      }
-
-      const item_id = data.item_id;
-      if (!item_id) {
-        return { success: false, message: 'Please provide an item id' };
-      }
-
-      const { uid } = context.auth;
-
-      if (!connection.readyState) {
-        connect(process.env.DB_URL);
-      }
-
-      const error = await this.validateItem(item_id, uid);
-      if (error) return { success: false, message: error };
-
-      // Proceed with the transaction
-      const foundItem = this.make_reservation(item_id, uid);
-      return { success: true, message: foundItem };
-    } catch (e) {
-      return { success: false, message: e.message };
+exports.createReservation = functions.https.onCall(async (data, context) => {
+  try {
+    if (!context.auth) {
+      return { success: false, message: 'User is not logged in.' };
     }
-  });
+
+    const item_id = data.item_id;
+    if (!item_id) {
+      return { success: false, message: 'Please provide an item id' };
+    }
+
+    const { uid } = context.auth;
+
+    if (!connection.readyState) {
+      connect(process.env.DB_URL);
+    }
+
+    const error = await this.validateItem(item_id, uid);
+    if (error) return { success: false, message: error };
+
+    // Proceed with the transaction
+    const foundItem = this.make_reservation(item_id, uid);
+    return { success: true, message: foundItem };
+  } catch (e) {
+    return { success: false, message: e.message };
+  }
+});
 
 /**
  * Checks the eligibility of renting
@@ -96,6 +95,7 @@ exports.make_reservation = async (item_id, uid) => {
     await foundItem.save({ validateBeforeSave: true });
     return foundItem;
   } catch (e) {
+    console.error('MAKE RESERVATION ERROR: ', e.message);
     throw new Error(e.message);
   }
 };
