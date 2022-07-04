@@ -129,7 +129,6 @@ exports.processTransaction = async (uid, item_id) => {
       if (foundItem.durationOfRent) {
         foundItem.nextAvailablePeriod = foundItem.nextAvailablePeriod + Date.now();
       } else {
-        // Set as 2 weeks to default if no n
         foundItem.durationOfRent = 604800;
         foundItem.nextAvailablePeriod = 604800 + Date.now();
       }
@@ -137,8 +136,6 @@ exports.processTransaction = async (uid, item_id) => {
     } else {
       foundItem.status = 'Sold';
     }
-
-    await foundItem.save({ session });
 
     const transaction = new Transaction({
       boardGameId: foundItem._id.toString(),
@@ -149,6 +146,9 @@ exports.processTransaction = async (uid, item_id) => {
       nextAvailablePeriod: foundItem.nextAvailablePeriod,
     });
 
+    foundItem.transactionNumber = transaction._id.toString();
+
+    await foundItem.save({ session });
     await transaction.save({ session });
 
     // Last step: Commit the transaction

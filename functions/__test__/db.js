@@ -1,26 +1,21 @@
-/**
- * Link: https://javascript.plainenglish.io/unit-testing-node-js-mongoose-using-jest-106a39b8393d
- */
-const mongoose = require("mongoose");
-const { MongoMemoryServer } = require("mongodb-memory-server");
+import { connect, connection } from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 
-exports.connect = async () => {
-  const mongoOpts = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    poolSize: 10,
-  };
-  await MongoMemoryServer.create(mongoOpts);
+const mongod = await MongoMemoryServer.create();
+
+export const connectDatabase = async (db_name) => {
+  const uri = mongod.getUri();
+  await connect(uri, { dbName: db_name });
 };
 
-exports.closeDatabase = async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
+export const closeDatabase = async () => {
+  await connection.dropDatabase();
+  await connection.close();
   await mongod.stop();
 };
 
-exports.clearDatabase = async () => {
-  const collections = mongoose.connection.collections;
+export const clearDatabase = async () => {
+  const collections = connection.collections;
   for (const key in collections) {
     const collection = collections[key];
     await collection.deleteMany();

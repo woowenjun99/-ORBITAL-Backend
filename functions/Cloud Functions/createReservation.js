@@ -9,13 +9,8 @@ const Item = new model('items', itemSchema);
 /**
  * Creates a cloud function called createReservation
  *
- * Conditions to fulfil:
- * 1. User must be logged in.
- * 2. Data consists of the following parameters:
- * @param {String} item_id The id of the item
- *
  * @returns True and the foundItem if the whole process is successful
- * @throws Error if there is several issues
+ * @throws Error if:
  *  1. User is not logged in
  *  2. No item_id is provided
  *  3. No item with the item_id is found

@@ -1,12 +1,11 @@
 import { vi, describe, expect, test } from 'vitest';
-import { Item } from '../service/Model';
+import { Item } from '../../service/Modeldel';
 import {
   validateItem,
   make_reservation,
-} from '../Cloud Functions/createReservation';
+} from '../../Cloud Functions/createReservationion';
 
 describe('create_reservation cloud functions', () => {
-  // Test Case 1: If the item is not present, it should return "No item found"
   test('ValidateItem Test 1', async () => {
     vi.spyOn(Item, 'findById').mockImplementationOnce(() => Promise.resolve(null));
     const result = await validateItem('123', '123');
@@ -48,7 +47,9 @@ describe('create_reservation cloud functions', () => {
   test('ValidateItem Test 5', async () => {
     vi.spyOn(Item, 'findById').mockImplementationOnce(() =>
       Promise.resolve({
+        createdBy: '456',
         status: 'available',
+        currentOwner: '456',
       })
     );
     const result = await validateItem('123', '123');
