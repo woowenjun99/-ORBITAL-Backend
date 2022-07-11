@@ -1,4 +1,10 @@
-import { Item, deleteItemRequest, getItemRequest } from "../../API/item";
+import {
+  Item,
+  deleteItemRequest,
+  getItemRequest,
+  postItemRequest,
+  User,
+} from "../../API/item";
 import { connectDatabase, clearDatabase, closeDatabase } from "../db";
 import { describe, test, expect, beforeAll, afterAll, afterEach } from "vitest";
 
@@ -326,5 +332,222 @@ describe("GET Request", async () => {
     const { status, message } = await getItemRequest(req);
     expect(status).toBe(400);
     expect(message).toBe("DO NOT PROVIDE MULTIPLE TYPES.");
+  });
+});
+
+describe("POST REQUEST", () => {
+  beforeAll(async () => {
+    await connectDatabase();
+  });
+
+  afterAll(async () => {
+    await closeDatabase();
+  });
+
+  afterEach(async () => {
+    await clearDatabase();
+  });
+
+  test("ITEM_POST_0001: If no request headers is provided, return 401.", async () => {
+    const req = { method: "POST" };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(401);
+    expect(message).toBe("No Firebase UID provided.");
+  });
+
+  test("ITEM_POST_0002: If no firebase uid is provided, return 401.", async () => {
+    const req = { method: "POST", headers: {} };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(401);
+    expect(message).toBe("No Firebase UID provided.");
+  });
+
+  test("ITEM_POST_0003: If the firebase uid is invalid, return 404.", async () => {
+    const req = { method: "POST", headers: { uid: "123456789" } };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(404);
+    expect(message).toBe("No user found. Unable to proceed with posting item.");
+  });
+
+  test("ITEM_POST_0004: If no request body is found, return 400.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = { method: "POST", headers: { uid: "123456789" } };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe(
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+    );
+  });
+
+  test("ITEM_POST_0005: If request body is found but no name is provided, return 400.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        description: "This is a mock item",
+        typeOfTransaction: "RENT",
+        deliveryInformation: "Send to home",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe(
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+    );
+  });
+
+  test("ITEM_POST_0006: If request body is found but no description is provided, return 400.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        name: "This is a mock item",
+        typeOfTransaction: "RENT",
+        deliveryInformation: "Send to home",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe(
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+    );
+  });
+
+  test("ITEM_POST_0007: If request body is found but no typeOfTransaction is provided, return 400.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        name: "This is a mock item",
+        description: "RENT",
+        deliveryInformation: "Send to home",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe(
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+    );
+  });
+
+  test("ITEM_POST_0008: If request body is found but no typeOfTransaction is provided, return 400.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        name: "This is a mock item",
+        description: "RENT",
+        typeOfTransaction: "RENT",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe(
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+    );
+  });
+
+  test("ITEM_POST_0009: If the typeOfTransaction is not RENT or SELL, return 400.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        name: "This is a mock item",
+        description: "RENT",
+        typeOfTransaction: "Hi",
+        deliveryInformation: "Send to home",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe("Invalid type of transaction.");
+  });
+
+  test("ITEM_POST_0010: If the price is provided, save the item but set the price to 0.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        name: "This is a mock item",
+        description: "RENT",
+        typeOfTransaction: "RENT",
+        deliveryInformation: "Send to home",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(201);
+    expect(message.price).toBe(0);
+  });
+
+  test("ITEM_POST_0011: If the price is provided, save the item with the price", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        name: "This is a mock item",
+        description: "RENT",
+        typeOfTransaction: "RENT",
+        deliveryInformation: "Send to home",
+        price: "2.00",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(201);
+    expect(message.price).toBe(2);
+  });
+
+  test("ITEM_POST_0012: If the typeOfTransaction is RENT, the duration of rent should be defined.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        name: "This is a mock item",
+        description: "RENT",
+        typeOfTransaction: "RENT",
+        deliveryInformation: "Send to home",
+        price: "2.00",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(201);
+    expect(message.price).toBe(2);
+    expect(message.durationOfRent).toBe(604800);
+  });
+
+  test("ITEM_POST_0013: If the typeOfTransaction is SELL, the duration of rent should be undefined.", async () => {
+    const user = new User({ uid: "123456789" });
+    await user.save();
+    const req = {
+      method: "POST",
+      headers: { uid: "123456789" },
+      body: {
+        name: "This is a mock item",
+        description: "SELL",
+        typeOfTransaction: "SELL",
+        deliveryInformation: "Send to home",
+        price: "2.00",
+      },
+    };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(201);
+    expect(message.price).toBe(2);
+    expect(message.durationOfRent).toBe(undefined);
   });
 });

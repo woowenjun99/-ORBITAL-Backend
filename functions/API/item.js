@@ -3,12 +3,11 @@ require("dotenv").config();
 const functions = require("firebase-functions");
 const { connect, connection, model } = require("mongoose");
 const cors = require("cors")({ origin: true });
-const { userSchema, itemSchema, transactionSchema } = require("../service/Schema");
+const { userSchema, itemSchema } = require("../service/Schema");
 
 // Creating the mongoose schemas to be used later
-const User = new model("users", userSchema);
 const Item = new model("items", itemSchema);
-const Transaction = new model("transactions", transactionSchema);
+const User = new model("users", userSchema);
 
 /* -------------- START: GET Request --------------------- */
 /**
@@ -138,6 +137,73 @@ const deleteItemRequest = async (req) => {
 };
 /* ----------------- END: DELETE Request ---------------------- */
 
+/* ----------------- START: POST Request ---------------------- */
+const postItemRequest = async (req) => {
+  if (!req.headers || !req.headers.uid) {
+    return { status: 401, message: "No Firebase UID provided." };
+  }
+
+  try {
+    const { uid } = req.headers;
+    const foundUser = await User.findOne({ uid });
+    if (!foundUser) {
+      return {
+        status: 404,
+        message: "No user found. Unable to proceed with posting item.",
+      };
+    }
+
+    if (
+      !req.body ||
+      !req.body.name ||
+      !req.body.description ||
+      !req.body.typeOfTransaction ||
+      !req.body.deliveryInformation
+    ) {
+      return {
+        status: 400,
+        message:
+          "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+      };
+    } else if (
+      req.body.typeOfTransaction !== "RENT" &&
+      req.body.typeOfTransaction !== "SELL"
+    ) {
+      return {
+        status: 400,
+        message: "Invalid type of transaction.",
+      };
+    }
+
+    const { body } = req;
+
+    const item = new Item({
+      // Compulsory variables
+      name: body.name,
+      description: body.description,
+      typeOfTransaction: body.typeOfTransaction,
+      deliveryInformation: body.deliveryInformation,
+      uid,
+      //   Optional variables
+      price: body.price ? Number(body.price) : 0,
+      tags: body.tags || undefined,
+      imageUrl: body.imageUrl || undefined,
+      //   Computational variables
+      timeCreated: Date.now(),
+      durationOfRent:
+        body.typeOfTransaction === "RENT" ? 7 * 24 * 60 * 60 : undefined,
+      currentOwner: uid,
+      offeredBy: null,
+      nextAvailablePeriod: null,
+    });
+
+    await item.save();
+    return { status: 201, message: item };
+  } catch (e) {
+    return { status: 500, message: e.message };
+  }
+};
+
 // Main Cloud Function
 const ItemCloudFunction = functions
   .region("asia-southeast1")
@@ -150,7 +216,8 @@ const ItemCloudFunction = functions
       let result;
 
       switch (req.method) {
-        case "PUT":
+        case "POST":
+          result = await postItemRequest(req);
           break;
         case "GET":
           result = await getItemRequest(req);
@@ -169,7 +236,7 @@ const ItemCloudFunction = functions
 // Exporting the required files
 exports.User = User;
 exports.Item = Item;
-exports.Transaction = Transaction;
 exports.item = ItemCloudFunction;
 exports.deleteItemRequest = deleteItemRequest;
 exports.getItemRequest = getItemRequest;
+exports.postItemRequest = postItemRequest;

@@ -1,6 +1,5 @@
 const { getHomepageListings } = require("./Cloud Functions/getHomepageListings");
 const { getUserListings } = require("./Cloud Functions/getUserListings");
-const { uploadListing } = require("./Cloud Functions/uploadListing");
 const { getUserInfo } = require("./Cloud Functions/getUserInfo");
 const { updateParticularsForm } = require("./Cloud Functions/updateParticularsForm");
 const { updateItem } = require("./Cloud Functions/updateItem");
@@ -16,7 +15,6 @@ const { item } = require("./API/item");
 // Cloud Functions
 exports.getHomepageListings = getHomepageListings;
 exports.getUserListings = getUserListings;
-exports.uploadListing = uploadListing;
 exports.getUserInfo = getUserInfo;
 exports.updateParticularsForm = updateParticularsForm;
 exports.updateItem = updateItem;
