@@ -8,7 +8,7 @@ import { Item } from '../../service/Model';
 
 describe('Should spin up a memory', () => {
   beforeAll(async () => {
-    await connectDatabase('orbital_integration');
+    await connectDatabase();
   });
 
   test('If no item is found, the "No item found" message should be shown.', async () => {

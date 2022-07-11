@@ -1,55 +1,70 @@
-require('dotenv').config();
-const functions = require('firebase-functions');
-const { connect } = require('mongoose');
-const { Item } = require('../service/Model');
+require("dotenv").config();
+const functions = require("firebase-functions");
+const { connect, connection } = require("mongoose");
+const { Item } = require("../service/Model");
+const cors = require("cors")({ origin: true });
 
-/**
- * Creates a Cloud Function that gets the user's listings
- *
- * @param {Object} context The context of the user
- * @return the list of items that belong to the user
- * @throws An issue if the user is not logged in
- * @throws An issue if there is an issue reading from the database
- */
-exports.getUserListings = functions.https.onCall(async (_, context) => {
+exports.findUserItemsFromDatabase = async (uid, status) => {
   try {
-    if (!context.auth) {
-      return { success: false, message: 'User is not logged in' };
+    // 1. Connect to the database.
+    if (!connection.isReady) {
+      connect(process.env.DB_URL);
     }
 
-    const { uid } = context.auth;
-    const results = await this.findUserItemsFromDatabase(uid);
+    // 2A. Create a pipeline for the items that are createdByTheUser
+    let pipeline, results;
 
-    return { success: true, message: results };
-  } catch (e) {
-    return { success: false, message: e.message };
-  }
-});
-
-/**
- * Use to retrieve all of the listings that were made by the user
- *
- * @param {String} uid
- * @returns The list of listings
- * @throws An issue if there is an error reading from the database
- */
-
-exports.findUserItemsFromDatabase = async (uid) => {
-  try {
-    connect(process.env.DB_URL);
-
-    // Finds the items that are created by the user
-    const pipeline1 = { $match: { createdBy: uid } };
+    if (status === "available" || status === "offered" || status === "sold") {
+      // GET user listings based on the status
+      results = await Item.find({
+        $and: [{ createdBy: uid }, { status }],
+      });
+    } else if (status === "purchased") {
+      results = await Item.find({
+        $and: [{ currentOwner: uid }, { status: "sold" }],
+      });
+    } else if (status === "reservation") {
+      results = await Item.find({ offeredBy: uid });
+    } else {
+      results = await Item.find({ createdBy: uid });
+    }
 
     // Sort them in descending order of timeCreated
-    const results = await Item.aggregate([pipeline1]).sort('field -timeCreated');
-
     results.forEach((element) => {
       element._id = element._id.toString();
     });
 
     return results;
   } catch (e) {
+    console.error(e.message);
     throw new Error(e.message);
+  }
+};
+
+exports.getUserListings = functions
+  .region("asia-southeast1")
+  .https.onRequest((req, res) => {
+    cors(req, res, async () => {
+      if (req.method !== "GET") {
+        res.status(405).json({ message: "Method not allowed" });
+        return;
+      }
+
+      const { status, message } = await this.processRequest(req);
+      res.status(status).json({ message: message });
+    });
+  });
+
+exports.processRequest = async (req) => {
+  const { uid, status } = req.query;
+  if (!uid) {
+    return { status: 403, message: "User is not logged in." };
+  }
+
+  try {
+    const foundItems = await this.findUserItemsFromDatabase(uid, status);
+    return { status: 200, message: foundItems };
+  } catch (e) {
+    return { status: 500, message: e.message };
   }
 };

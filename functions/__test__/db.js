@@ -1,11 +1,12 @@
-import { connect, connection } from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { connect, connection } from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-const mongod = await MongoMemoryServer.create();
+let mongod;
 
-export const connectDatabase = async (db_name) => {
+export const connectDatabase = async () => {
+  mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-  await connect(uri, { dbName: db_name });
+  await connect(uri, { dbName: "Testing" });
 };
 
 export const closeDatabase = async () => {
