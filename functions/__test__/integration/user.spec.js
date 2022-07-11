@@ -30,7 +30,7 @@ describe("GET Request", () => {
   });
 
   test("USER_GET_0003: If no user is found, return 404", async () => {
-    const req = { method: "GET", headers: { uid: "123456" } };
+    const req = { method: "GET", query: { uid: "123456" } };
     const { status, message } = await getUserRequest(req);
     expect(status).toBe(404);
     expect(message).toBe("No user found.");
@@ -39,7 +39,7 @@ describe("GET Request", () => {
   test("USER_GET_0004: If the user is found, return 200", async () => {
     const user = new User({ uid: "123456" });
     await user.save();
-    const req = { method: "GET", headers: { uid: "123456" } };
+    const req = { method: "GET", query: { uid: "123456" } };
     const { status, message } = await getUserRequest(req);
     expect(status).toBe(200);
     expect(typeof message).toBe("object");
@@ -51,7 +51,7 @@ describe("GET Request", () => {
     const item = new Item({ createdBy: "123456" });
     await item.save();
     await user.save();
-    const req = { method: "GET", headers: { uid: "123456" } };
+    const req = { method: "GET", query: { uid: "123456" } };
     const { status, message } = await getUserRequest(req);
     expect(status).toBe(200);
     expect(message.items.length).toBe(1);

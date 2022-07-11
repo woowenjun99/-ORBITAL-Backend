@@ -20,8 +20,8 @@ const getItemByIdRequest = async ({ id }) => {
     foundItem._id = foundItem._id.toString();
 
     return { status: 200, message: foundItem };
-  } catch (e) {
-    return { status: 500, message: e.message };
+  } catch ({ message }) {
+    return { status: 500, message };
   }
 };
 
@@ -54,8 +54,8 @@ const filterAndSearchRequest = async ({ search, tags }) => {
     }
 
     return { status: 200, message: foundItems };
-  } catch (e) {
-    return { status: 500, message: e.message };
+  } catch ({ message }) {
+    return { status: 500, message };
   }
 };
 
@@ -88,8 +88,8 @@ const deleteItemFromDatabase = async (uid, item_id) => {
     };
     const deletedItem = await Item.findOneAndDelete(condition);
     return deletedItem;
-  } catch (e) {
-    throw new Error(e.message);
+  } catch ({ message }) {
+    throw new Error(message);
   }
 };
 
@@ -110,8 +110,8 @@ const deleteItemRequest = async ({ headers, body }) => {
     }
 
     return { status: 200, message: results };
-  } catch (e) {
-    return { status: 500, message: e.message };
+  } catch ({ message }) {
+    return { status: 500, message };
   }
 };
 
@@ -184,8 +184,8 @@ const postItemRequest = async ({ headers, body }) => {
 
     await item.save();
     return { status: 201, message: item };
-  } catch (e) {
-    return { status: 500, message: e.message };
+  } catch ({ message }) {
+    return { status: 500, message };
   }
 };
 
@@ -241,13 +241,11 @@ const putItemRequest = async ({ headers, body }) => {
     foundItem.imageURL = imageURL;
     await foundItem.save();
     return { status: 201, message: foundItem };
-  } catch (e) {
-    return { status: 500, message: e.message };
+  } catch ({ message }) {
+    return { status: 500, message };
   }
 };
-/* ---------------- END: PUT REQUEST ------------- */
 
-// Main Cloud Function
 const ItemCloudFunction = functions
   .region("asia-southeast1")
   .https.onRequest((req, res) => {
@@ -279,7 +277,6 @@ const ItemCloudFunction = functions
     });
   });
 
-// Exporting the required files
 exports.User = User;
 exports.Item = Item;
 exports.item = ItemCloudFunction;

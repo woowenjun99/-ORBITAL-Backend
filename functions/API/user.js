@@ -7,12 +7,12 @@ const { userSchema, itemSchema } = require("../service/Schema");
 const User = new model("users", userSchema);
 const Item = new model("items", itemSchema);
 
-const getUserRequest = async ({ headers }) => {
-  if (!headers || !headers.uid) {
+const getUserRequest = async ({ query }) => {
+  if (!query || !query.uid) {
     return { status: 400, message: "Please provide a uid." };
   }
   try {
-    const { uid } = headers;
+    const { uid } = query;
     const foundUser = await User.findOne({ uid });
     if (!foundUser) {
       return { status: 404, message: "No user found." };
