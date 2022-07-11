@@ -1,4 +1,4 @@
-const { Schema, Types } = require('mongoose');
+const { Schema, Types } = require("mongoose");
 
 exports.userSchema = new Schema({
   name: String,

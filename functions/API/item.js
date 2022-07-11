@@ -9,13 +9,12 @@ const Item = new model("items", itemSchema);
 const User = new model("users", userSchema);
 
 /* -------------- START: GET Request --------------------- */
-const getItemByIdRequest = async (req) => {
+const getItemByIdRequest = async ({ id }) => {
   try {
-    if (!req.query.id) {
+    if (!id) {
       return { status: 400, message: "No item id provided." };
     }
 
-    const { id } = req.query;
     const foundItem = await Item.findById(id);
     if (!foundItem) {
       return { status: 404, message: "No item found." };
@@ -28,22 +27,20 @@ const getItemByIdRequest = async (req) => {
   }
 };
 
-const filterAndSearchRequest = async (req) => {
-  let searchPipeline, tagPipeline, foundItems, search, tags;
+const filterAndSearchRequest = async ({ search, tags }) => {
+  let searchPipeline, tagPipeline, foundItems;
 
-  if (!req.query.search && !req.query.tags) {
+  if (!search && !tags) {
     return { status: 400, message: "Please provide a search query or tags." };
-  } else if (Array.isArray(req.query.search)) {
+  } else if (Array.isArray(search)) {
     return { status: 400, message: "Please do not provide multiple search queries" };
   }
 
-  if (req.query.search) {
-    search = req.query.search;
+  if (search) {
     searchPipeline = { name: new RegExp(search.trim(), "i") };
   }
 
-  if (req.query.tags) {
-    tags = req.query.tags;
+  if (tags) {
     tagPipeline = { tags: { $all: tags } };
   }
 
@@ -58,32 +55,27 @@ const filterAndSearchRequest = async (req) => {
       });
     }
 
-    // If no item is found, a 404 error should be returned.
-    if (foundItems.length === 0) {
-      return { status: 404, message: "No items found." };
-    }
-
     return { status: 200, message: foundItems };
   } catch (e) {
     return { status: 500, message: e.message };
   }
 };
 
-const getItemRequest = async (req) => {
-  if (!req.query || !req.query.type) {
+const getItemRequest = async ({ query }) => {
+  if (!query || !query.type) {
     return { status: 400, message: "I don't know what you want me to do." };
-  } else if (Array.isArray(req.query.type)) {
+  } else if (Array.isArray(query.type)) {
     return { status: 400, message: "DO NOT PROVIDE MULTIPLE TYPES." };
   }
 
-  const { type } = req.query;
+  const { type } = query;
   let result;
   switch (type) {
     case "getItemById":
-      result = await getItemByIdRequest(req);
+      result = await getItemByIdRequest(query);
       break;
     case "filterAndSearch":
-      result = await filterAndSearchRequest(req);
+      result = await filterAndSearchRequest(query);
       break;
     default:
       result = { status: 400, message: "No such type." };

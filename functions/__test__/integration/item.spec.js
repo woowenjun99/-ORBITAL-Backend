@@ -205,8 +205,8 @@ describe("GET Request", async () => {
       query: { type: "filterAndSearch", search: "Test" },
     };
     const { status, message } = await getItemRequest(req);
-    expect(status).toBe(404);
-    expect(message).toBe("No items found.");
+    expect(status).toBe(200);
+    expect(message).toStrictEqual([]);
   });
 
   test("ITEM_GET_0010 (filterAndSearch): If the search matches an object, return an array with the object.", async () => {
@@ -246,8 +246,8 @@ describe("GET Request", async () => {
 
     await item.save();
     const { status, message } = await getItemRequest(req);
-    expect(status).toBe(404);
-    expect(message).toBe("No items found.");
+    expect(status).toBe(200);
+    expect(message).toStrictEqual([]);
   });
 
   test("ITEM_GET_0012 (filterAndSearch): If the search matches any object but there is an additional tag, return 404", async () => {
@@ -267,8 +267,8 @@ describe("GET Request", async () => {
 
     await item.save();
     const { status, message } = await getItemRequest(req);
-    expect(status).toBe(404);
-    expect(message).toBe("No items found.");
+    expect(status).toBe(200);
+    expect(message).toStrictEqual([]);
   });
 
   test("ITEM_GET_0013 (filterAndSearch): If the search matches any object but there is one less tag, return 200", async () => {
