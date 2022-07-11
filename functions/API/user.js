@@ -50,6 +50,7 @@ const putUserRequest = async ({ headers, body }) => {
       const newUser = new User({
         name,
         username,
+        phone,
         postal,
         gender,
         address,

@@ -4,11 +4,9 @@ const { connect, connection, model } = require("mongoose");
 const cors = require("cors")({ origin: true });
 const { userSchema, itemSchema } = require("../service/Schema");
 
-// Creating the mongoose schemas to be used later
 const Item = new model("items", itemSchema);
 const User = new model("users", userSchema);
 
-/* -------------- START: GET Request --------------------- */
 const getItemByIdRequest = async ({ id }) => {
   try {
     if (!id) {
@@ -82,9 +80,7 @@ const getItemRequest = async ({ query }) => {
   }
   return result;
 };
-/* -------------- END: GET Request --------------------- */
 
-/* -------------- START: DELETE Request ------------------ */
 const deleteItemFromDatabase = async (uid, item_id) => {
   try {
     const condition = {
@@ -97,16 +93,16 @@ const deleteItemFromDatabase = async (uid, item_id) => {
   }
 };
 
-const deleteItemRequest = async (req) => {
+const deleteItemRequest = async ({ headers, body }) => {
   try {
-    if (!req.headers || !req.headers.uid) {
+    if (!headers || !headers.uid) {
       return { status: 401, message: "No Firebase UID provided." };
-    } else if (!req.body || !req.body.item_id) {
+    } else if (!body || !body.item_id) {
       return { status: 400, message: "No item_id is provided in the body" };
     }
 
-    const uid = req.headers.uid;
-    const { item_id } = req.body;
+    const uid = headers.uid;
+    const { item_id } = body;
 
     const results = await deleteItemFromDatabase(uid, item_id);
     if (!results) {
@@ -118,16 +114,14 @@ const deleteItemRequest = async (req) => {
     return { status: 500, message: e.message };
   }
 };
-/* ----------------- END: DELETE Request ---------------------- */
 
-/* ----------------- START: POST Request ---------------------- */
-const postItemRequest = async (req) => {
-  if (!req.headers || !req.headers.uid) {
+const postItemRequest = async ({ headers, body }) => {
+  if (!headers || !headers.uid) {
     return { status: 401, message: "No Firebase UID provided." };
   }
 
   try {
-    const { uid } = req.headers;
+    const { uid } = headers;
     const foundUser = await User.findOne({ uid });
     if (!foundUser) {
       return {
@@ -137,11 +131,11 @@ const postItemRequest = async (req) => {
     }
 
     if (
-      !req.body ||
-      !req.body.name ||
-      !req.body.description ||
-      !req.body.typeOfTransaction ||
-      !req.body.deliveryInformation
+      !body ||
+      !body.name ||
+      !body.description ||
+      !body.typeOfTransaction ||
+      !body.deliveryInformation
     ) {
       return {
         status: 400,
@@ -149,8 +143,8 @@ const postItemRequest = async (req) => {
           "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
       };
     } else if (
-      req.body.typeOfTransaction !== "RENT" &&
-      req.body.typeOfTransaction !== "SELL"
+      body.typeOfTransaction !== "RENT" &&
+      body.typeOfTransaction !== "SELL"
     ) {
       return {
         status: 400,
@@ -158,19 +152,27 @@ const postItemRequest = async (req) => {
       };
     }
 
-    const { body } = req;
+    const {
+      name,
+      description,
+      typeOfTransaction,
+      deliveryInformation,
+      price,
+      tags,
+      imageURL,
+    } = body;
 
     const item = new Item({
       // Compulsory variables
-      name: body.name,
-      description: body.description,
-      typeOfTransaction: body.typeOfTransaction,
-      deliveryInformation: body.deliveryInformation,
+      name,
+      description,
+      typeOfTransaction,
+      deliveryInformation,
       uid,
       //   Optional variables
-      price: body.price ? Number(body.price) : 0,
-      tags: body.tags || undefined,
-      imageURL: body.imageURL || undefined,
+      price: price ? Number(price) : 0,
+      tags: tags || undefined,
+      imageURL: imageURL || undefined,
       //   Computational variables
       timeCreated: Date.now(),
       durationOfRent:
@@ -186,19 +188,17 @@ const postItemRequest = async (req) => {
     return { status: 500, message: e.message };
   }
 };
-/* ---------------- END: POST REQUEST ------------- */
 
-/* ---------------- START: PUT REQUEST ------------- */
-const putItemRequest = async (req) => {
-  if (!req.headers || !req.headers.uid) {
+const putItemRequest = async ({ headers, body }) => {
+  if (!headers || !headers.uid) {
     return { status: 401, message: "No Firebase UID provided." };
-  } else if (!req.body || !req.body.item_id) {
+  } else if (!body || !body.item_id) {
     return { status: 400, message: "No item_id provided" };
   }
 
   try {
-    const { uid } = req.headers;
-    const { item_id } = req.body;
+    const { uid } = headers;
+    const { item_id } = body;
     const foundUser = await User.findOne({ uid });
     if (!foundUser) {
       return {
@@ -222,15 +222,23 @@ const putItemRequest = async (req) => {
       };
     }
 
-    const body = req.body;
+    const {
+      name,
+      description,
+      typeOfTransaction,
+      price,
+      deliveryInformation,
+      tags,
+      imageURL,
+    } = body;
 
-    foundItem.name = body.name || "";
-    foundItem.description = body.description || "";
-    foundItem.typeOfTransaction = body.typeOfTransaction || "RENT";
-    foundItem.price = body.price || 0;
-    foundItem.deliveryInformation = body.deliveryInformation || "";
-    foundItem.tags = body.tags || [];
-    foundItem.imageURL = body.imageURL || [];
+    foundItem.name = name;
+    foundItem.description = description;
+    foundItem.typeOfTransaction = typeOfTransaction || "RENT";
+    foundItem.price = price || 0;
+    foundItem.deliveryInformation = deliveryInformation;
+    foundItem.tags = tags;
+    foundItem.imageURL = imageURL;
     await foundItem.save();
     return { status: 201, message: foundItem };
   } catch (e) {
