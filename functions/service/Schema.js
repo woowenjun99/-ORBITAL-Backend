@@ -32,7 +32,7 @@ exports.itemSchema = new Schema({
   currentOwner: String,
   durationOfRent: Number,
   tags: [String],
-  imageURL: String,
+  imageURL: [String],
   timeCreated: Number,
   status: String,
   offeredBy: String,

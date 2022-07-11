@@ -1,4 +1,3 @@
-// Requiring the necessary imports
 require("dotenv").config();
 const functions = require("firebase-functions");
 const { connect, connection, model } = require("mongoose");
@@ -10,13 +9,6 @@ const Item = new model("items", itemSchema);
 const User = new model("users", userSchema);
 
 /* -------------- START: GET Request --------------------- */
-/**
- * Type 1: GET the item by its id.
- * Use Case: When the user wants to preview an item.
- *
- * @param {Object} req The HTTP request body
- * @returns {status: Number, message: String | Object}
- */
 const getItemByIdRequest = async (req) => {
   try {
     if (!req.query.id) {
@@ -55,7 +47,6 @@ const filterAndSearchRequest = async (req) => {
     tagPipeline = { tags: { $all: tags } };
   }
 
-  // Start finding the items once the request is valid.
   try {
     if (!tags) {
       foundItems = await Item.find(searchPipeline);
@@ -187,7 +178,7 @@ const postItemRequest = async (req) => {
       //   Optional variables
       price: body.price ? Number(body.price) : 0,
       tags: body.tags || undefined,
-      imageUrl: body.imageUrl || undefined,
+      imageURL: body.imageURL || undefined,
       //   Computational variables
       timeCreated: Date.now(),
       durationOfRent:
@@ -203,6 +194,58 @@ const postItemRequest = async (req) => {
     return { status: 500, message: e.message };
   }
 };
+/* ---------------- END: POST REQUEST ------------- */
+
+/* ---------------- START: PUT REQUEST ------------- */
+const putItemRequest = async (req) => {
+  if (!req.headers || !req.headers.uid) {
+    return { status: 401, message: "No Firebase UID provided." };
+  } else if (!req.body || !req.body.item_id) {
+    return { status: 400, message: "No item_id provided" };
+  }
+
+  try {
+    const { uid } = req.headers;
+    const { item_id } = req.body;
+    const foundUser = await User.findOne({ uid });
+    if (!foundUser) {
+      return {
+        status: 404,
+        message: "No user found. Unable to proceed with update item.",
+      };
+    }
+
+    const foundItem = await Item.findById(item_id);
+    if (!foundItem) {
+      return {
+        status: 404,
+        message: "No item found.",
+      };
+    }
+
+    if (foundItem.createdBy !== uid) {
+      return {
+        status: 400,
+        message: "You do not have permission to edit this item.",
+      };
+    }
+
+    const body = req.body;
+
+    foundItem.name = body.name || "";
+    foundItem.description = body.description || "";
+    foundItem.typeOfTransaction = body.typeOfTransaction || "RENT";
+    foundItem.price = body.price || 0;
+    foundItem.deliveryInformation = body.deliveryInformation || "";
+    foundItem.tags = body.tags || [];
+    foundItem.imageURL = body.imageURL || [];
+    await foundItem.save();
+    return { status: 201, message: foundItem };
+  } catch (e) {
+    return { status: 500, message: e.message };
+  }
+};
+/* ---------------- END: PUT REQUEST ------------- */
 
 // Main Cloud Function
 const ItemCloudFunction = functions
@@ -216,6 +259,9 @@ const ItemCloudFunction = functions
       let result;
 
       switch (req.method) {
+        case "PUT":
+          result = await putItemRequest(req);
+          break;
         case "POST":
           result = await postItemRequest(req);
           break;
@@ -240,3 +286,4 @@ exports.item = ItemCloudFunction;
 exports.deleteItemRequest = deleteItemRequest;
 exports.getItemRequest = getItemRequest;
 exports.postItemRequest = postItemRequest;
+exports.putItemRequest = putItemRequest;

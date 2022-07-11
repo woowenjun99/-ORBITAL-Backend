@@ -4,6 +4,7 @@ import {
   getItemRequest,
   postItemRequest,
   User,
+  putItemRequest,
 } from "../../API/item";
 import { connectDatabase, clearDatabase, closeDatabase } from "../db";
 import { describe, test, expect, beforeAll, afterAll, afterEach } from "vitest";
@@ -549,5 +550,105 @@ describe("POST REQUEST", () => {
     expect(status).toBe(201);
     expect(message.price).toBe(2);
     expect(message.durationOfRent).toBe(undefined);
+  });
+});
+
+describe("PUT REQUEST", () => {
+  beforeAll(async () => {
+    await connectDatabase();
+  });
+
+  afterAll(async () => {
+    await closeDatabase();
+  });
+
+  afterEach(async () => {
+    await clearDatabase();
+  });
+
+  test("ITEM_PUT_0001: If no request.headers is provided, return 401.", async () => {
+    const req = { method: "PUT" };
+    const { status, message } = await putItemRequest(req);
+    expect(status).toBe(401);
+    expect(message).toBe("No Firebase UID provided.");
+  });
+
+  test("ITEM_PUT_0002: If uid is not provided, return 401.", async () => {
+    const req = { method: "PUT", headers: {} };
+    const { status, message } = await putItemRequest(req);
+    expect(status).toBe(401);
+    expect(message).toBe("No Firebase UID provided.");
+  });
+
+  test("ITEM_PUT_0003: If no req.body is provided, return 400.", async () => {
+    const req = { method: "PUT", headers: { uid: "123456" } };
+    const { status, message } = await putItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe("No item_id provided");
+  });
+
+  test("ITEM_PUT_0004: If req.body does not contain item_id, return 400.", async () => {
+    const req = { method: "PUT", headers: { uid: "123456" }, body: {} };
+    const { status, message } = await putItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe("No item_id provided");
+  });
+
+  test("ITEM_PUT_0005: If no user exists, return 404.", async () => {
+    const req = {
+      method: "PUT",
+      headers: { uid: "123456" },
+      body: { item_id: "62b7d1b7dd67e5f67cab0145" },
+    };
+    const { status, message } = await putItemRequest(req);
+    expect(status).toBe(404);
+    expect(message).toBe("No user found. Unable to proceed with update item.");
+  });
+
+  test("ITEM_PUT_0006: If no item is found, return 404", async () => {
+    const user = new User({ uid: "123456" });
+    await user.save();
+    const req = {
+      method: "PUT",
+      headers: { uid: "123456" },
+      body: { item_id: "62b7d1b7dd67e5f67cab0145" },
+    };
+    const { status, message } = await putItemRequest(req);
+    expect(status).toBe(404);
+    expect(message).toBe("No item found.");
+  });
+
+  test("ITEM_PUT_0007: If an item is found but the createdBy is not the user, return 400", async () => {
+    const user = new User({ uid: "123456" });
+    const item = new Item({ createdBy: "654321", _id: "62b7d1b7dd67e5f67cab0145" });
+    await user.save();
+    await item.save();
+    const req = {
+      method: "PUT",
+      headers: { uid: "123456" },
+      body: { item_id: "62b7d1b7dd67e5f67cab0145" },
+    };
+    const { status, message } = await putItemRequest(req);
+    expect(status).toBe(400);
+    expect(message).toBe("You do not have permission to edit this item.");
+  });
+
+  test("ITEM_PUT_0008: If the change is successful, return 201", async () => {
+    const user = new User({ uid: "123456" });
+    const item = new Item({
+      createdBy: "123456",
+      _id: "62b7d1b7dd67e5f67cab0145",
+      name: "Mock 1",
+    });
+    await user.save();
+    await item.save();
+    const req = {
+      method: "PUT",
+      headers: { uid: "123456" },
+      body: { item_id: "62b7d1b7dd67e5f67cab0145", name: "Mock 2" },
+    };
+    const { status, message } = await putItemRequest(req);
+    expect(status).toBe(201);
+    expect(message.name).toBe("Mock 2");
   });
 });
