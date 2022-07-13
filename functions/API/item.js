@@ -3,9 +3,36 @@ const functions = require("firebase-functions");
 const { connect, connection, model } = require("mongoose");
 const cors = require("cors")({ origin: true });
 const { userSchema, itemSchema } = require("../service/Schema");
+const { AVAILABLE, OFFERED, RENT, SELL, SOLD } = require("./types");
 
 const Item = new model("items", itemSchema);
 const User = new model("users", userSchema);
+
+const getListingsBasedOnStatus = async ({ status, uid }) => {
+  try {
+    if (!status || !uid) {
+      return { status: 400, message: "Please provide status and uid in query." };
+    }
+
+    let results;
+    if (status === AVAILABLE || status === OFFERED || status === SOLD) {
+      results = await Item.find({
+        $and: [{ createdBy: uid }, { status }],
+      });
+    } else if (status === "purchased") {
+      results = await Item.find({
+        $and: [{ currentOwner: uid }, { status: SOLD }],
+      });
+    } else if (status === "reservation") {
+      results = await Item.find({ offeredBy: uid });
+    } else {
+      results = await Item.find({ createdBy: uid });
+    }
+    return { status: 200, message: results };
+  } catch ({ message }) {
+    return { status: 500, message };
+  }
+};
 
 const getItemByIdRequest = async ({ id }) => {
   try {
@@ -75,6 +102,9 @@ const getItemRequest = async ({ query }) => {
     case "filterAndSearch":
       result = await filterAndSearchRequest(query);
       break;
+    case "getListingsBasedOnStatus":
+      result = await getListingsBasedOnStatus(query);
+      break;
     default:
       result = { status: 400, message: "No such type." };
   }
@@ -84,7 +114,7 @@ const getItemRequest = async ({ query }) => {
 const deleteItemFromDatabase = async (uid, item_id) => {
   try {
     const condition = {
-      $and: [{ createdBy: uid }, { _id: item_id }, { status: "available" }],
+      $and: [{ createdBy: uid }, { _id: item_id }, { status: AVAILABLE }],
     };
     const deletedItem = await Item.findOneAndDelete(condition);
     return deletedItem;
@@ -118,7 +148,19 @@ const deleteItemRequest = async ({ headers, body }) => {
 const postItemRequest = async ({ headers, body }) => {
   if (!headers || !headers.uid) {
     return { status: 401, message: "No Firebase UID provided." };
+  } else if (!body) {
+    return { status: 400, message: "Please provide a body." };
   }
+
+  const {
+    name,
+    description,
+    typeOfTransaction,
+    deliveryInformation,
+    price,
+    tags,
+    imageURL,
+  } = body;
 
   try {
     const { uid } = headers;
@@ -130,37 +172,21 @@ const postItemRequest = async ({ headers, body }) => {
       };
     }
 
-    if (
-      !body ||
-      !body.name ||
-      !body.description ||
-      !body.typeOfTransaction ||
-      !body.deliveryInformation
-    ) {
+    if (!name || !description || !typeOfTransaction || !deliveryInformation) {
       return {
         status: 400,
         message:
           "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
       };
     } else if (
-      body.typeOfTransaction !== "RENT" &&
-      body.typeOfTransaction !== "SELL"
+      body.typeOfTransaction !== RENT &&
+      body.typeOfTransaction !== SELL
     ) {
       return {
         status: 400,
         message: "Invalid type of transaction.",
       };
     }
-
-    const {
-      name,
-      description,
-      typeOfTransaction,
-      deliveryInformation,
-      price,
-      tags,
-      imageURL,
-    } = body;
 
     const item = new Item({
       // Compulsory variables
@@ -176,10 +202,12 @@ const postItemRequest = async ({ headers, body }) => {
       //   Computational variables
       timeCreated: Date.now(),
       durationOfRent:
-        body.typeOfTransaction === "RENT" ? 7 * 24 * 60 * 60 : undefined,
+        body.typeOfTransaction === RENT ? 7 * 24 * 60 * 60 : undefined,
       currentOwner: uid,
       offeredBy: null,
       nextAvailablePeriod: null,
+      createdBy: uid,
+      status: AVAILABLE,
     });
 
     await item.save();
@@ -234,7 +262,7 @@ const putItemRequest = async ({ headers, body }) => {
 
     foundItem.name = name;
     foundItem.description = description;
-    foundItem.typeOfTransaction = typeOfTransaction || "RENT";
+    foundItem.typeOfTransaction = typeOfTransaction || RENT;
     foundItem.price = price || 0;
     foundItem.deliveryInformation = deliveryInformation;
     foundItem.tags = tags;

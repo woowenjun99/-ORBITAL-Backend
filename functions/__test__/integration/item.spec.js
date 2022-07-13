@@ -104,7 +104,7 @@ describe("DELETE Request", () => {
     const item = new Item({
       _id: "62b7d1b7dd67e5f67cab0145",
       createdBy: "123456789",
-      status: "available",
+      status: "AVAILABLE",
     });
 
     await item.save();
@@ -334,6 +334,33 @@ describe("GET Request", async () => {
     expect(status).toBe(400);
     expect(message).toBe("DO NOT PROVIDE MULTIPLE TYPES.");
   });
+
+  test("ITEM_GET_0017 (getUserItemBasedOnListing): If no uid is provided, return 400.", async () => {
+    const req = {
+      method: "GET",
+      query: { type: "getListingsBasedOnStatus", status: "Hi" },
+    };
+    const { status, message } = await getItemRequest(req);
+    expect(message).toBe("Please provide status and uid in query.");
+  });
+
+  test("ITEM_GET_0018 (getUserItemBasedOnListing): If no status is provided, return 400.", async () => {
+    const req = {
+      method: "GET",
+      query: { type: "getListingsBasedOnStatus", uid: "123456" },
+    };
+    const { status, message } = await getItemRequest(req);
+    expect(message).toBe("Please provide status and uid in query.");
+  });
+
+  test("ITEM_GET_0019 (getUserItemBasedOnListing): If no status is provided, return 400.", async () => {
+    const req = {
+      method: "GET",
+      query: { type: "getListingsBasedOnStatus", uid: "123456" },
+    };
+    const { status, message } = await getItemRequest(req);
+    expect(message).toBe("Please provide status and uid in query.");
+  });
 });
 
 describe("POST REQUEST", () => {
@@ -363,22 +390,18 @@ describe("POST REQUEST", () => {
     expect(message).toBe("No Firebase UID provided.");
   });
 
-  test("ITEM_POST_0003: If the firebase uid is invalid, return 404.", async () => {
-    const req = { method: "POST", headers: { uid: "123456789" } };
-    const { status, message } = await postItemRequest(req);
-    expect(status).toBe(404);
-    expect(message).toBe("No user found. Unable to proceed with posting item.");
-  });
-
-  test("ITEM_POST_0004: If no request body is found, return 400.", async () => {
-    const user = new User({ uid: "123456789" });
-    await user.save();
+  test("ITEM_POST_0003: If no body is provided, return 400.", async () => {
     const req = { method: "POST", headers: { uid: "123456789" } };
     const { status, message } = await postItemRequest(req);
     expect(status).toBe(400);
-    expect(message).toBe(
-      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
-    );
+    expect(message).toBe("Please provide a body.");
+  });
+
+  test("ITEM_POST_0004: If the uid does not exist, return 404.", async () => {
+    const req = { method: "POST", headers: { uid: "123456789" }, body: {} };
+    const { status, message } = await postItemRequest(req);
+    expect(status).toBe(404);
+    expect(message).toBe("No user found. Unable to proceed with posting item.");
   });
 
   test("ITEM_POST_0005: If request body is found but no name is provided, return 400.", async () => {

@@ -1,4 +1,3 @@
-const { getUserListings } = require("./Cloud Functions/getUserListings");
 const { getOtherUserListings } = require("./Cloud Functions/getOtherUserListings");
 const { createReservation } = require("./Cloud Functions/createReservation");
 const { makeTransaction } = require("./Cloud Functions/makeTransaction");
@@ -10,7 +9,6 @@ const { user } = require("./API/user");
 const { home } = require("./API/home");
 
 // Cloud Functions
-exports.getUserListings = getUserListings;
 exports.getOtherUserListings = getOtherUserListings;
 exports.createReservation = createReservation;
 exports.getUnavailableListings = getUnavailableListings;
