@@ -17,8 +17,8 @@ const getHomeRequest = async ({ headers }) => {
       results = await Item.aggregate([pipeline1]).limit(100);
     }
     return { status: 200, message: results };
-  } catch ({ message }) {
-    return { status: 500, message };
+  } catch (e) {
+    return { status: 500, message: e.message };
   }
 };
 
