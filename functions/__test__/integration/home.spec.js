@@ -1,7 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll, vi } from "vitest";
 import { connectDatabase, closeDatabase } from "../db";
 import { getHomeRequest, Item } from "../../API/home";
-import mongoose from "mongoose";
 
 describe("GET REQUEST", async () => {
   beforeAll(async () => {
@@ -12,9 +11,7 @@ describe("GET REQUEST", async () => {
     await item2.save();
   });
 
-  afterAll(async () => {
-    await closeDatabase();
-  });
+  afterAll(closeDatabase);
 
   test("HOME_GET_0001: If no headers is provider, return all of the items in the database.", async () => {
     const req = {};
