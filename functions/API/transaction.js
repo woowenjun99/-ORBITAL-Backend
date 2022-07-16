@@ -105,6 +105,8 @@ const postTransactionRequest = async ({ headers, body }) => {
 
     await foundItem.save({ session });
     await transaction.save({ session });
+    
+    // 6. End the transaction
     session.commitTransaction();
     return { status: 201, message: foundItem };
   } catch (e) {
