@@ -13,3 +13,8 @@ exports.GET = "GET";
 exports.POST = "POST";
 exports.PUT = "PUT";
 exports.DELETE = "DELETE";
+
+// ENUMS FOR ERROR MESSAGES
+exports.NO_UID_IN_HEADER = "NO UID PROVIDED IN HEADERS";
+exports.INVALID_BODY = "INVALID BODY";
+exports.NO_ITEM_FOUND = "NO ITEM FOUND"
