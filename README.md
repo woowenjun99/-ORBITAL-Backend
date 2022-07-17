@@ -4,7 +4,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    3 min 06 seconds    | 621 words  |
+|    4 min 18 seconds    | 861 words  |
 
 ## 0. Introduction
 
@@ -80,9 +80,37 @@ Similar to most groups, we used GitHub as our application's main source of versi
 According to Martin Fowler, just because we run code after pushing to the main branch does not mean it is Continuous Integration. In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change. (Martin, 2022)"
 
 ### 2.2. Test Driven Development
-I have adopted ***Test Driven Development*** and I really love it! Essentially, it allows me to catch all the possible bugs that I have in my code before and improve the quality of my code. Under the functions/test directory,  you can see the test code that I have written for the project.
 
-I have modified TDD to my purposes. For a start, I am not very confident that I am 
+I have adopted **_TEST DRIVEN DEVELOPMENT_** and I really love it! Essentially, it allows me to catch all the possible bugs that I have in my code before and improve the quality of my code. Under the functions/test directory, you can see the test code that I have written for the project.
+
+I have modified TDD to my purposes because I am not very confident with completely using the TDD Approach of **_RED GREEN REFACTOR_**.
+
+1. RED -- Write test code and watch it fail
+2. GREEN -- Write enough code for the test to pass
+3. REFACTOR -- Improve the current code
+
+My approach for Test Driven Development is as follows:
+
+1. Think of the ways that the code will fail using the **_BOUNDARY VALUE ANALYSIS_** approach.
+2. Write code such that it will fail. For instance, I expect to have the uid parameter in the request headers. Therefore, I will write code that fails and stop.
+
+```js
+if (!headers || !headers.uid) {
+  return { status: 404, message: "No uid provided in the headers." };
+}
+```
+
+Before I adopt this approach, I would have just extracted the uid through `const {uid} = headers`. However, there is also a possibility that the headers is null too, which will make the Server fail. However, after I have adopted this approach, I realised my mistake and make changes to it. After I have watched the test code passes, I will proceed with the next line.
+
+With this approach, I have written a total number of **86 tests** for now. I have combined Unit Testing and Integration Testing together with the help of MongoDB-Memory-Server which allows me to connect to a local db and storing the information inside a real DB. This local db code can be found under functions/test/db.js. This is the **INTEGRATION TESTING** aspect of the code.
+
+For the **UNIT TESTING** aspect, I will use the spyOn to make the database actions fail and see whether I get back status 500. A snippet of the unit test is as follows.
+
+```js
+vi.spyOn(Item, "findOne").mockRejectValueOnce({})
+```
+Through the use of TDD, Unit Testing and Integration Testing, I have managed to significantly improve the quality of my code and it will work 95% of the time every time I deploy, saving me a lot of time.
+
 ## References Used
 
 1. https://miro.medium.com/max/992/0*xaIymdUxmx-aH4fk.png (SOURCE: GOOGLE IMAGE, used in Section 1.1.3.)
