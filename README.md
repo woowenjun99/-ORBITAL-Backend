@@ -2,7 +2,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    9 min 50 seconds    | 1969 words |
+|   10 min 30 seconds    | 2103 words |
 
 At the point of writing this README, it would have been the 3rd milestone and you would have noticed that I make changes to my README multiple times. Needless to say, this is because I have picked up new knowledge along the way. Unlike many groups in Orbital,
 I do not learn new technology because technology can be easily learnt. As of date, I am able to do cron jobs, VueJS, Flutter Development, ExpressJS. I can also understand a bit of ReactJS code. However, the reason why I have not done any personal projects as of date is because I am busy. I work tirelessly for 7 days a week with the following commitments:
