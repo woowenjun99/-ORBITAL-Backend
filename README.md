@@ -4,7 +4,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    8 min 25 seconds    | 1685 words |
+|    9 min 37 seconds    | 1925 words |
 
 At the point of writing this README, it would have been the 3rd milestone and you would have noticed that I make changes to my README multiple times. Needless to say, this is because I have picked up new knowledge along the way. Unlike many groups in Orbital,
 I do not learn new technology because technology can be easily learnt. As of date, I am able to do cron jobs, VueJS, Flutter Development, ExpressJS. I can also understand a bit of ReactJS code. However, the reason why I have not done any personal projects as of date is because I am busy. I work tirelessly for 7 days a week with the following commitments:
@@ -149,40 +149,46 @@ if (!headers || !headers.uid) {
 const { uid } = headers;
 ```
 
+### 2.2.2. INTEGRATION TESTING
+
+Detractors of my argument might posit that we follow the test pyramid and carry out 70% unit tests, 20% integration tests and 10% of manual tests. However, I did a combination of both for the backend. For the validation of input such as whether the header or body is present, I did mainly unit tests. However, when the database logic is involved, I will use integration tests immediately.
+
+One thing that I really enjoy about MongoDB is that there is a package called MongoDB-Memory-Server available for us to perform Integration Testing with. MongoDB-Memory-Server will spin up a local db uri which can be used to mimic a real database and I am able to perform CRUD operations just as it would be in the production environment. After each test, I will clear up all of the database data before moving on to the next test. Finally, after all the tests are completed, I can completely drop the database. The database code can be found here. To run tests, you can run the following command:
+
+```bash
+$ npm run test
+```
+
+### 2.2.3. UNIT TESTING
+
+The difference between Unit Testing and Integration Testing is that we do not involve any npm package libraries inside. This means that we will be doing mocks, spies and stubbing. The only 2 times that I did unit testings are as follows:
+
+1. Checking whether the correct status code is returned after the database action fails. The process is actually very simple:
+
+```js
+// To fail the Item.findOne() in the code
+vi.spyOn(User, "findOne").mockRejectValueOnce({});
+const req = { headers: { uid: "123456" } };
+const { status } = await postUserHandler(req);
+expect(status).toBe(500);
+```
+
+2. The second time that I did Unit Testing was to determine whether the state is consistent if the database action fails and the transaction is aborted. As the code is longer, you might have to go to the test directory to take a look at it yourself.
+
+### 2.2.4. TEST STATISTICS
+
 | Test Cases (To Date) | Code Coverage |
 | :------------------: | :-----------: |
 |          86          |      94%      |
 
-### 2.2.1. INTEGRATION TESTING
+## SOURCES:
 
-One thing that I really enjoy about MongoDB is that there is a package called MongoDB-Memory-Server available for us to perform Integration Testing with. MongoDB-Memory-Server will spin up a local db uri which can be used to mimic a real database and I am able to perform CRUD operations just as it would be in the production environment. After each test, I will clear up all of the database data before moving on to the next test. Finally, after all the tests are completed, I can completely drop the database. The database code can be found here.
+1. Modern Software Engineering, David Farley
 
-> functions/**test**/db.js
+2. Udemy Google Cloud Architecture Course
 
-### 2.2.2. UNIT TESTING
+3. GitHub System Design Primer Repo
 
-The only time that I did unit testing is when I will use the spyOn method of Vitest to make the database actions fail solely to see whether I get back status 500. A snippet of the unit test is as follows.
+4. Harvard CS75 Lecture 9: Scalability
 
-```js
-// To fail the Item.findOne() in the code
-vi.spyOn(Item, "findOne").mockRejectValueOnce({});
-```
-
-### 2.2.3. COMBINATION AND PROOF OF USE
-
-Through the use of TDD, Unit Testing and Integration Testing, I have managed to significantly improve the quality of my code. It has also saved me a lot of time finding bugs. For instance, there was a time when Marcus told me that the Home API did not work for him. The first thing that I did was to check whether the tests passes and it did so I knew that the problem wasn't with the code. In the end, I realised that it was a bug on another file code. The bug was located within 10 minutes.
-
-### 3. CONTINUOUS INTEGRATION AND CONTINUOUS DEPLOYMENT
-
-Continuous Integration allows us to receive feedback as early as possible. I have integrated Continuous Integration into GitHub Actions using
-
-## References Used
-
-1. https://miro.medium.com/max/992/0*xaIymdUxmx-aH4fk.png (SOURCE: GOOGLE IMAGE, used in Section 1.1.3.)
-2. Modern Software Engineering, David Farley
-
-## Resource References:
-
-1. Harvard CS75 Scalability Lecture 2012: https://www.youtube.com/watch?v=-W9F__D3oY4&t=1916s
-
-2.
+5. Educative.io: System Design Course
