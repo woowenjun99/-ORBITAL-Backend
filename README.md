@@ -4,7 +4,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    7 min 25 seconds    | 1289 words |
+|    7 min 38 seconds    | 1528 words |
 
 At the point of writing this README, it would have been the 3rd milestone and you would have noticed that I make changes to my README multiple times. Needless to say, this is because I have picked up new knowledge along the way. Unlike many groups in Orbital,
 I do not learn new technology because technology can be easily learnt. As of date, I am able to do cron jobs, VueJS, Flutter Development, ExpressJS. I can also understand a bit of ReactJS code. However, the reason why I have not done any personal projects as of date is because I am busy. I work tirelessly for 7 days a week with the following commitments:
@@ -33,14 +33,14 @@ For our app, we will be using the 5 parameters to design our application. There 
 4. Maintainability
 5. Fault-Tolerant
 
-### 1.1 Scalability
+### 1.1 SCALABILITY
 
 **Scalability** refers to the ability of our app to retain its performance when the workload increases. There are many ways that workload can increase, and these includes:
 
 1. Increase in client requests to the server
 2. Increase in the information being stored in the database.
 
-### 1.2. Introduction to Cloud Computing
+#### 1.1.1. INTRODUCTION TO CLOUD COMPUTING
 
 Google Cloud Services are **_PAAS (Platform as a Service)_** while server architecture are **_IAAS (Infrastructure as a Service)_**. Before the era of Cloud Computing, there is only server infrastructure. This means that there are physical data centers with servers that manages the client's request. However, there are several problems with using a Server Architecture.
 
@@ -50,19 +50,19 @@ Google Cloud Services are **_PAAS (Platform as a Service)_** while server archit
 
 With the rise in Cloud Computing, we would only need to pay for what we use, which is much cheaper and affordable. We have adopted a server-less architecture because it is scalable and easy to use.
 
-### 1.3. WHY GCP AND NOT AWS OR MICROSOFT AZURE?
+#### 1.1.2. WHY GCP AND NOT AWS OR MICROSOFT AZURE?
 
 - I have experience in GCP Cloud Functions from my side job.
 
 - Google is powering their services with GCP itself. If millions of users can use Google Services like www.google.com without any issue, why should we doubt Google Services?
 
-### 1.4. Types of Scalability
+#### 1.1.3. TYPES OF SCALABILITY
 
 - **_VERTICAL SCALING_** -- Having one or a few computers or servers to manage the load of the users. We can scale up by upgrading the CPU or RAMs but there is a limit to which we can upgrade.
 
 - **_HORIZONTAL SCALING_** -- Having many computers or servers to manage the load of the users. These computers do not necessarily need to be as good as the computers used in VERTICAL SCALING.
 
-### 1.5. How horizontal scaling works
+#### 1.1.4. How horizontal scaling works
 
 Supposed that we have many clients and a pool of servers. How do we distribute the workload such that it is even? If we have many servers, how do we keep track of their IP addresses? The solution to this would be to have a middleman who has a public IP address and able to distribute the workload. This middleman is known as a **_LOAD BALANCER_**. One of the ways that the load balancer can distribute the workload is through a method called **_ROUND ROBIN_** via BIND. This means that it will first pass the work to server 1, then server 2 and so on until it finishes allocating to all the servers. Following which, it will go back and allocate the work to server 1 again. There are several limitations to ROUND ROBIN:
 
@@ -70,9 +70,21 @@ Supposed that we have many clients and a pool of servers. How do we distribute t
 
 - Sessions might not work since we are constantly jumping from server to server.
 
-### 1.1.4. Issue with server-less architecture
+#### 1.1.5. DRAWBACKS WITH SERVER-LESS ARCHITECTURE
 
 Scalability and performance are inversely related. Therefore, it is important for us to balance between both the scalability and performance.
+
+### 1.2. AVAILABILITY
+
+Another parameter that we look out for when designing our system is the availability. Supposed that we set our region to be in US and our users are based in Singapore, the speed of the server response will significantly decrease. What happens if the data center in Singapore goes down? We need to plan all of these beforehand.
+
+#### 1.2.1. Google Cloud Platform
+
+Google Cloud Services is available in many regions around the world and is continuously expanding. In each region, there are 3 clusters (correct me if I am wrong) and within each clusters, there are zones. Therefore, if any of the data center goes down, we are able to redirect the request to a nearby zone or cluster to ensure that our services keep running. To ensure that our server is as closed to home as possible, I have also set the region to be the one for Singapore. This can be seen in my code.
+
+```js
+exports.user = region("asia-southeast1").https.onRequest()
+```
 
 ### 1.6. Conclusion
 
@@ -86,7 +98,7 @@ Scalability and performance are inversely related. Therefore, it is important fo
 
 Similar to most groups, we used GitHub as our application's main source of version control. However, I did not do feature branching because I do not see the need to. Unlike most groups, Marcus and I work separately on our own branches because we are in charge of different things. I am mainly in charge of server-side development while he is in-charge of the UIUX and Frontend development. Therefore, he will not understand my code and like-wise I do not understand his code. Nonetheless, we are following what is known as **_CONTINUOUS INTEGRATION_** which is the requirement for Artemis Team.
 
-According to Martin Fowler, just because we run code after pushing to the main branch does not mean it is Continuous Integration. In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change. (Martin, 2022)"
+According to Martin Fowler, just because we run code after pushing to the main branch does not mean it is Continuous Integration. In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change. (David, 2022)"
 
 ### 2.2. Test Driven Development
 
