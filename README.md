@@ -4,7 +4,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    4 min 18 seconds    | 861 words  |
+|    5 min 45 seconds    | 1153 words |
 
 ## 0. Introduction
 
@@ -81,6 +81,10 @@ According to Martin Fowler, just because we run code after pushing to the main b
 
 ### 2.2. Test Driven Development
 
+| Test Cases (To Date) |
+| :------------------: |
+|          86          |
+
 I have adopted **_TEST DRIVEN DEVELOPMENT_** and I really love it! Essentially, it allows me to catch all the possible bugs that I have in my code before and improve the quality of my code. Under the functions/test directory, you can see the test code that I have written for the project.
 
 I have modified TDD to my purposes because I am not very confident with completely using the TDD Approach of **_RED GREEN REFACTOR_**.
@@ -102,14 +106,28 @@ if (!headers || !headers.uid) {
 
 Before I adopt this approach, I would have just extracted the uid through `const {uid} = headers`. However, there is also a possibility that the headers is null too, which will make the Server fail. However, after I have adopted this approach, I realised my mistake and make changes to it. After I have watched the test code passes, I will proceed with the next line.
 
-With this approach, I have written a total number of **86 tests** for now. I have combined Unit Testing and Integration Testing together with the help of MongoDB-Memory-Server which allows me to connect to a local db and storing the information inside a real DB. This local db code can be found under functions/test/db.js. This is the **INTEGRATION TESTING** aspect of the code.
+### 2.2.1. INTEGRATION TESTING
 
-For the **UNIT TESTING** aspect, I will use the spyOn to make the database actions fail and see whether I get back status 500. A snippet of the unit test is as follows.
+One thing that I really enjoy about MongoDB is that there is a package called MongoDB-Memory-Server available for us to perform Integration Testing with. MongoDB-Memory-Server will spin up a local db uri which can be used to mimic a real database and I am able to perform CRUD operations just as it would be in the production environment. After each test, I will clear up all of the database data before moving on to the next test. Finally, after all the tests are completed, I can completely drop the database. The database code can be found here.
+
+> functions/**test**/db.js
+
+### 2.2.2. UNIT TESTING
+
+The only time that I did unit testing is when I will use the spyOn method of Vitest to make the database actions fail solely to see whether I get back status 500. A snippet of the unit test is as follows.
 
 ```js
-vi.spyOn(Item, "findOne").mockRejectValueOnce({})
+// To fail the Item.findOne() in the code
+vi.spyOn(Item, "findOne").mockRejectValueOnce({});
 ```
-Through the use of TDD, Unit Testing and Integration Testing, I have managed to significantly improve the quality of my code and it will work 95% of the time every time I deploy, saving me a lot of time.
+
+### 2.2.3. COMBINATION AND PROOF OF USE
+
+Through the use of TDD, Unit Testing and Integration Testing, I have managed to significantly improve the quality of my code. It has also saved me a lot of time finding bugs. For instance, there was a time when Marcus told me that the Home API did not work for him. The first thing that I did was to check whether the tests passes and it did so I knew that the problem wasn't with the code. In the end, I realised that it was a bug on another file code. The bug was located within 10 minutes.
+
+### 3. CONTINUOUS INTEGRATION AND CONTINUOUS DEPLOYMENT
+
+Continuous Integration allows us to receive feedback as early as possible.
 
 ## References Used
 
