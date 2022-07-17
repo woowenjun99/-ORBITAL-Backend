@@ -4,7 +4,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    9 min 37 seconds    | 1925 words |
+|    9 min 50 seconds    | 1969 words |
 
 At the point of writing this README, it would have been the 3rd milestone and you would have noticed that I make changes to my README multiple times. Needless to say, this is because I have picked up new knowledge along the way. Unlike many groups in Orbital,
 I do not learn new technology because technology can be easily learnt. As of date, I am able to do cron jobs, VueJS, Flutter Development, ExpressJS. I can also understand a bit of ReactJS code. However, the reason why I have not done any personal projects as of date is because I am busy. I work tirelessly for 7 days a week with the following commitments:
@@ -130,7 +130,7 @@ test("POST_0001: If no headers is provided, return 401", async () => {
 
 ```js
 if (!headers || !headers.uid) {
-  return { status: 404, message: "No uid provided in the headers." };
+  return { status: 401, message: "No uid provided in the headers." };
 }
 ```
 
