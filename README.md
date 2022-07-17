@@ -161,7 +161,7 @@ $ npm run test
 
 The difference between Unit Testing and Integration Testing is that we do not involve any npm package libraries inside. This means that we will be doing mocks, spies and stubbing. The only 2 times that I did unit testings are as follows:
 
-1. Checking whether the correct status code is returned after the database action fails. The process is actually very simple:
+1. Checking whether the correct status code is returned after the database action fails. The process is actually very simple. I just spyOn the User mongoose model and make it fail.
 
 ```js
 // To fail the Item.findOne() in the code
@@ -179,6 +179,12 @@ expect(status).toBe(500);
 | :------------------: | :-----------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |          86          |      94%      | [![codecov](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend/branch/main/graph/badge.svg?token=kM9iPdOLlW)](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend) |
 
+## 2.3. SINGLE RESPONSIBILITY PRINCIPLE
+
+This principle was highly recommended by my advisor and I am really surprised by how simple this principle is and the software principles involved in it. **_SINGLE RESPONSIBILITY PRINCIPLE_** states that every software component should have one and only one responsibility or one reason to change. This principle actually brings in another 2 principles of SWE which are **_COUPLING_**, **_COHESION_** and **_MODULARITY_**.
+
+For my code, there is not really a lot of cohesion involved but I have broken down my code into smaller modules (or rather modularise it) so that they are loosely coupled and there is only one reason to change. I have separated out the DB Logic into another function so that there is only one reason to change -- If the database that I am using changes.
+
 ## SOURCES:
 
 1. Modern Software Engineering, David Farley
@@ -191,10 +197,20 @@ expect(status).toBe(500);
 
 5. Educative.io: System Design Course
 
-## PEOPLE TO THANK
+## A SPECIAL THANKS TO THESE PEOPLE FOR GUIDING ME ON THE BACKEND JOURNEY FOR ORBITAL AND MY DEVELOPMENT JOURNEY
 
 1. Marcus Ong Qin Yuan : My partner for Orbital
 
 2. Viky: Our mentor for Orbital
 
 3. Ni Jiaying: Our advisor for Orbital
+
+4. Nobel Ang: My Raffles Hall Backend lead
+
+5. Dianne Loh: CTO of VibeFam
+
+6. Andrew: VP of Technology of Vault Dragon Medical
+
+7. Joe: Senior Developer of Vault Dragon Medical
+
+8. Vu Van Dung: FE Developer for Ezkomment and my friend
