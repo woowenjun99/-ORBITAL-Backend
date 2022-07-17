@@ -1,5 +1,3 @@
-[![codecov](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend/branch/main/graph/badge.svg?token=kM9iPdOLlW)](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend)
-
 # ORBITAL 2022 BACKEND README
 
 | Estimated Reading Time | Word Count |
@@ -177,9 +175,9 @@ expect(status).toBe(500);
 
 ### 2.2.4. TEST STATISTICS
 
-| Test Cases (To Date) | Code Coverage |
-| :------------------: | :-----------: |
-|          86          |      94%      |
+| Test Cases (To Date) | Code Coverage |                                                                        Code Quality Badge                                                                         |
+| :------------------: | :-----------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|          86          |      94%      | [![codecov](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend/branch/main/graph/badge.svg?token=kM9iPdOLlW)](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend) |
 
 ## SOURCES:
 
@@ -192,3 +190,11 @@ expect(status).toBe(500);
 4. Harvard CS75 Lecture 9: Scalability
 
 5. Educative.io: System Design Course
+
+## PEOPLE TO THANK
+
+1. Marcus Ong Qin Yuan : My partner for Orbital
+
+2. Viky: Our mentor for Orbital
+
+3. Ni Jiaying: Our advisor for Orbital
