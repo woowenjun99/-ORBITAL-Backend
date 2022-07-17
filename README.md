@@ -4,7 +4,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    3 min 06 seconds    |  621 words |
+|    3 min 06 seconds    | 621 words  |
 
 ## 0. Introduction
 
@@ -14,9 +14,7 @@ To whoever is reading my GitHub repository, be it whether you are an employer, a
 2. Software Engineering Principles
 3. Continuous Integration and Continuous Development.
 
-
-Without further ado, let's begin.  
-
+Without further ado, let's begin.
 
 ## 1. System Design
 
@@ -30,7 +28,7 @@ Some big companies like Google will test System Design concepts during their int
 
 ### 1.1 Scalability
 
-__Scalability__ refers to the ability of our app to retain its performance when the workload increases. There are many ways that workload can increase, and some of these ways include:
+**Scalability** refers to the ability of our app to retain its performance when the workload increases. There are many ways that workload can increase, and some of these ways include:
 
 1. Increase in client requests to the server
 2. Increase in the information being stored in the database.
@@ -47,13 +45,13 @@ In the past, we would have to carry out what is known as **PEAK LOAD PROVISIONIN
 
 #### 1.1.2. Types of Scalability
 
-1. **VERTICAL SCALING** -- Having one or a few computers or servers to manage the load of the users. We can scale up by upgrading the CPU or RAMs but there is a limit to which we can upgrade. 
+1. **VERTICAL SCALING** -- Having one or a few computers or servers to manage the load of the users. We can scale up by upgrading the CPU or RAMs but there is a limit to which we can upgrade.
 
 2. **HORIZONTAL SCALING** -- Having many computers or servers to manage the load of the users. These computers do not necessarily need to be as good as the computers used in VERTICAL SCALING.
 
 #### 1.1.3. How horizontal scaling works
 
-We have a pool of clients and a pool of servers. Now, we need a middleman to distribute the workload to the servers. The middleman is known as a **LOAD BALANCER**. 
+We have a pool of clients and a pool of servers. Now, we need a middleman to distribute the workload to the servers. The middleman is known as a **LOAD BALANCER**.
 
 ![Load Balancer](https://miro.medium.com/max/992/0*xaIymdUxmx-aH4fk.png)
 
@@ -64,18 +62,34 @@ One way that the load balancer can distribute the workload is **ROUND ROBIN** vi
 2. Sessions might not work since we are constantly jumping from server to server.
 
 ### 1.1.4. Issue with server-less architecture
+
 Scalability and performance are inversely related. Therefore, it is important for us to balance between both the scalability and performance.
 
-### 6. Conclusion
+### 1.6. Conclusion
 
-| Question # | Question to ask | Solution |
-| :---: | :--------------:| :-------:|
-| 1 | How many users do we have? | 100,000 |
+| Question # |      Question to ask       | Solution |
+| :--------: | :------------------------: | :------: |
+|     1      | How many users do we have? | 100,000  |
 
-## Image Used
+## 2. Software Engineering Principles
+
+### 2.1. GitHub Version Control
+
+Similar to most groups, we used GitHub as our application's main source of version control. However, I did not do feature branching because I do not see the need to. Unlike most groups, Marcus and I work separately on our own branches because we are in charge of different things. I am mainly in charge of server-side development while he is in-charge of the UIUX and Frontend development. Therefore, he will not understand my code and like-wise I do not understand his code. Nonetheless, we are following what is known as **_CONTINUOUS INTEGRATION_** which is the requirement for Artemis Team.
+
+According to Martin Fowler, just because we run code after pushing to the main branch does not mean it is Continuous Integration. In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change. (Martin, 2022)"
+
+### 2.2. Test Driven Development
+I have adopted ***Test Driven Development*** and I really love it! Essentially, it allows me to catch all the possible bugs that I have in my code before and improve the quality of my code. Under the functions/test directory,  you can see the test code that I have written for the project.
+
+I have modified TDD to my purposes. For a start, I am not very confident that I am 
+## References Used
+
 1. https://miro.medium.com/max/992/0*xaIymdUxmx-aH4fk.png (SOURCE: GOOGLE IMAGE, used in Section 1.1.3.)
+2. Modern Software Engineering, David Farley
 
 ## Resource References:
+
 1. Harvard CS75 Scalability Lecture 2012: https://www.youtube.com/watch?v=-W9F__D3oY4&t=1916s
 
-2. 
+2.
