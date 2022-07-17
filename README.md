@@ -4,7 +4,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    6 min 26 seconds    | 1289 words |
+|    7 min 25 seconds    | 1289 words |
 
 At the point of writing this README, it would have been the 3rd milestone and you would have noticed that I make changes to my README multiple times. Needless to say, this is because I have picked up new knowledge along the way. Unlike many groups in Orbital,
 I do not learn new technology because technology can be easily learnt. As of date, I am able to do cron jobs, VueJS, Flutter Development, ExpressJS. I can also understand a bit of ReactJS code. However, the reason why I have not done any personal projects as of date is because I am busy. I work tirelessly for 7 days a week with the following commitments:
@@ -17,17 +17,15 @@ Therefore, I have just taken this opportunity during Orbital to mix and match th
 
 ## 0. Introduction
 
-To whoever is reading my GitHub repository, be it whether you are an employer, a friend or anyone on the Internet, I happily welcome you here. My name is Wen Jun and I am the backend engineer of the application Neigh. The following README will be broken down into the following sections:
+To whoever is reading my GitHub repository, I happily welcome you here. My name is Wen Jun and I am the Backend Engineer for the application of the application Neigh. The following README will be broken down into the following sections:
 
 1. System Design
 2. Software Engineering Principles
 3. Continuous Integration and Continuous Development.
 
-Without further ado, let's begin.
-
 ## 1. System Design
 
-Some big companies like Google will test System Design concepts during their interviews. Therefore, it is important for us as Software Engineers and Software Architects to understand how to design a system for any uses. When we design a system, there are 5 characteristics that we have to pay attention to. The 5 characteristics are:
+For our app, we will be using the 5 parameters to design our application. There is no-one-size-fits-all solution for designing a system, so there might be better alternatives. However, we will be justifying the use of the technology in this README based on the 5 parameters, as well as discussing the pros and cons.
 
 1. Scalability
 2. Availability
@@ -37,38 +35,40 @@ Some big companies like Google will test System Design concepts during their int
 
 ### 1.1 Scalability
 
-**Scalability** refers to the ability of our app to retain its performance when the workload increases. There are many ways that workload can increase, and some of these ways include:
+**Scalability** refers to the ability of our app to retain its performance when the workload increases. There are many ways that workload can increase, and these includes:
 
 1. Increase in client requests to the server
 2. Increase in the information being stored in the database.
 
-#### 1.1.1. Introduction to Cloud Computing
+### 1.2. Introduction to Cloud Computing
 
-Before the era of Cloud Computing, there is only server computing. This means that there are physical data centers with computers known as servers that manages the requests coming from the client side. However, there are several problems with this.
+Google Cloud Services are **_PAAS (Platform as a Service)_** while server architecture are **_IAAS (Infrastructure as a Service)_**. Before the era of Cloud Computing, there is only server infrastructure. This means that there are physical data centers with servers that manages the client's request. However, there are several problems with using a Server Architecture.
 
-1. Take a shopping center as an example. On the weekends, there are many people visiting the mall, and this will lead to an increase in the workload of the servers. However, on the weekdays, the number of patrons are relatively fewer. These servers will just be left around idling when no one uses them, thus it is a waste of resources.
+- Supposed that we acquire an infrastructure and our application suddenly becomes popular. The load on the backend will spike. If the current infrastructure is unable to handle the sudden increase, we would need to acquire more infrastructure. This is known as **_PEAK LOAD PROVISIONING_**. It might be problematic if we are unable to acquire the infrastructure.
 
-2. Suppose we have a start-up and it suddenly becomes popular. The workload of the start up will increase. This means that the current infrastructure will not be able to handle the sudden spike in workload and we need to acquire more infrastructure. What happens if we are unable to acquire the infrastructure?
+- Great! So we just acquire more infrastructure in advance. However, on some days like the weekdays, the number of people using our application might not be that much. What happens to the infrastructure right now? These servers are just left around idling when no one is using them, wasting both resources and money.
 
-In the past, we would have to carry out what is known as **PEAK LOAD PROVISIONING**, and this will usually require forward planning. However, there is also an issue aforementioned in 1 where the infrastructure is just left idling when the load is low. Fortunately, the solution to that would be to have a server-less architecture which is **AUTO-SCALING**.
+With the rise in Cloud Computing, we would only need to pay for what we use, which is much cheaper and affordable. We have adopted a server-less architecture because it is scalable and easy to use.
 
-#### 1.1.2. Types of Scalability
+### 1.3. WHY GCP AND NOT AWS OR MICROSOFT AZURE?
 
-1. **VERTICAL SCALING** -- Having one or a few computers or servers to manage the load of the users. We can scale up by upgrading the CPU or RAMs but there is a limit to which we can upgrade.
+- I have experience in GCP Cloud Functions from my side job.
 
-2. **HORIZONTAL SCALING** -- Having many computers or servers to manage the load of the users. These computers do not necessarily need to be as good as the computers used in VERTICAL SCALING.
+- Google is powering their services with GCP itself. If millions of users can use Google Services like www.google.com without any issue, why should we doubt Google Services?
 
-#### 1.1.3. How horizontal scaling works
+### 1.4. Types of Scalability
 
-We have a pool of clients and a pool of servers. Now, we need a middleman to distribute the workload to the servers. The middleman is known as a **LOAD BALANCER**.
+- **_VERTICAL SCALING_** -- Having one or a few computers or servers to manage the load of the users. We can scale up by upgrading the CPU or RAMs but there is a limit to which we can upgrade.
 
-![Load Balancer](https://miro.medium.com/max/992/0*xaIymdUxmx-aH4fk.png)
+- **_HORIZONTAL SCALING_** -- Having many computers or servers to manage the load of the users. These computers do not necessarily need to be as good as the computers used in VERTICAL SCALING.
 
-One way that the load balancer can distribute the workload is **ROUND ROBIN** via BIND. This means that it will first pass the work to server 1, then server 2 and so on until it finishes allocating to all the servers. Following which, it will go back and allocate the work to server 1 again. There are several limitations to ROUND ROBIN:
+### 1.5. How horizontal scaling works
 
-1. There might be an uneven distribution amount of work. For instance, some servers will encounter power heavy users while some servers will encounter less power heavy users. Therefore, the load is technically not that evenly distributed.
+Supposed that we have many clients and a pool of servers. How do we distribute the workload such that it is even? If we have many servers, how do we keep track of their IP addresses? The solution to this would be to have a middleman who has a public IP address and able to distribute the workload. This middleman is known as a **_LOAD BALANCER_**. One of the ways that the load balancer can distribute the workload is through a method called **_ROUND ROBIN_** via BIND. This means that it will first pass the work to server 1, then server 2 and so on until it finishes allocating to all the servers. Following which, it will go back and allocate the work to server 1 again. There are several limitations to ROUND ROBIN:
 
-2. Sessions might not work since we are constantly jumping from server to server.
+- There might be an uneven distribution amount of work. For instance, some servers will encounter power heavy users while some servers will encounter less power heavy users. Therefore, the load is technically not that evenly distributed.
+
+- Sessions might not work since we are constantly jumping from server to server.
 
 ### 1.1.4. Issue with server-less architecture
 
