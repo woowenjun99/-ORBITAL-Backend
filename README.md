@@ -4,7 +4,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    7 min 38 seconds    | 1528 words |
+|    8 min 25 seconds    | 1685 words |
 
 At the point of writing this README, it would have been the 3rd milestone and you would have noticed that I make changes to my README multiple times. Needless to say, this is because I have picked up new knowledge along the way. Unlike many groups in Orbital,
 I do not learn new technology because technology can be easily learnt. As of date, I am able to do cron jobs, VueJS, Flutter Development, ExpressJS. I can also understand a bit of ReactJS code. However, the reason why I have not done any personal projects as of date is because I am busy. I work tirelessly for 7 days a week with the following commitments:
@@ -62,7 +62,7 @@ With the rise in Cloud Computing, we would only need to pay for what we use, whi
 
 - **_HORIZONTAL SCALING_** -- Having many computers or servers to manage the load of the users. These computers do not necessarily need to be as good as the computers used in VERTICAL SCALING.
 
-#### 1.1.4. How horizontal scaling works
+#### 1.1.4. HOW HORIZONTAL SCALING WORKS
 
 Supposed that we have many clients and a pool of servers. How do we distribute the workload such that it is even? If we have many servers, how do we keep track of their IP addresses? The solution to this would be to have a middleman who has a public IP address and able to distribute the workload. This middleman is known as a **_LOAD BALANCER_**. One of the ways that the load balancer can distribute the workload is through a method called **_ROUND ROBIN_** via BIND. This means that it will first pass the work to server 1, then server 2 and so on until it finishes allocating to all the servers. Following which, it will go back and allocate the work to server 1 again. There are several limitations to ROUND ROBIN:
 
@@ -74,6 +74,10 @@ Supposed that we have many clients and a pool of servers. How do we distribute t
 
 Scalability and performance are inversely related. Therefore, it is important for us to balance between both the scalability and performance.
 
+#### 1.1.6. DATABASE
+
+In terms of Scalability, NoSQL databases are more scalable as compared to their SQL counterparts. Therefore, we will be adopting a NoSQL for our project.
+
 ### 1.2. AVAILABILITY
 
 Another parameter that we look out for when designing our system is the availability. Supposed that we set our region to be in US and our users are based in Singapore, the speed of the server response will significantly decrease. What happens if the data center in Singapore goes down? We need to plan all of these beforehand.
@@ -83,41 +87,46 @@ Another parameter that we look out for when designing our system is the availabi
 Google Cloud Services is available in many regions around the world and is continuously expanding. In each region, there are 3 clusters (correct me if I am wrong) and within each clusters, there are zones. Therefore, if any of the data center goes down, we are able to redirect the request to a nearby zone or cluster to ensure that our services keep running. To ensure that our server is as closed to home as possible, I have also set the region to be the one for Singapore. This can be seen in my code.
 
 ```js
-exports.user = region("asia-southeast1").https.onRequest()
+exports.user = region("asia-southeast1").https.onRequest();
 ```
 
 ### 1.6. Conclusion
 
-| Question # |      Question to ask       | Solution |
-| :--------: | :------------------------: | :------: |
-|     1      | How many users do we have? | 100,000  |
+| Question # |           Question to ask           |                      Solution                       |
+| :--------: | :---------------------------------: | :-------------------------------------------------: |
+|     1      |     How many users do we have?      |                       100,000                       |
+|     2      | What if one of the servers crashed? | GCP can redirect the request to another zone for us |
 
-## 2. Software Engineering Principles
+## 2. SOFTWARE ENGINEERING PRINCIPLES
 
-### 2.1. GitHub Version Control
+### 2.1. GITHUB VERSION CONTROL
 
 Similar to most groups, we used GitHub as our application's main source of version control. However, I did not do feature branching because I do not see the need to. Unlike most groups, Marcus and I work separately on our own branches because we are in charge of different things. I am mainly in charge of server-side development while he is in-charge of the UIUX and Frontend development. Therefore, he will not understand my code and like-wise I do not understand his code. Nonetheless, we are following what is known as **_CONTINUOUS INTEGRATION_** which is the requirement for Artemis Team.
 
-According to Martin Fowler, just because we run code after pushing to the main branch does not mean it is Continuous Integration. In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change. (David, 2022)"
+According to Martin Fowler, a famous SWE Blogger from Thoughtworks and where our Advisor Viky came from, he mentions that "just because we run code after pushing to the main branch does not mean it is Continuous Integration". In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change." (David, 2022) Therefore, as part of the requirement of Orbital, I did not do feature branching and did Continuous Integration instead.
 
-### 2.2. Test Driven Development
+### 2.2. TEST DRIVEN DEVELOPMENT
 
-| Test Cases (To Date) |
-| :------------------: |
-|          86          |
+Initially, I that TDD was difficult because I am not confident with writing code. However, for this milestone itself, I have adopted and tweaked TDD and I was seriously blown away by the results. Not only does TDD help me catch all the bugs before I deploy it, it has improved the quality of my code. I am grateful to my advisor Viky for promoting this approach and which had led to a significant improvement from where I am after the 2nd milestone. I am not confident enough to fully write TDD, so I tweaked it to suit me. Nonetheless, it still follows the **_RED, GREEN, REFACTOR_** principles of TDD.
 
-I have adopted **_TEST DRIVEN DEVELOPMENT_** and I really love it! Essentially, it allows me to catch all the possible bugs that I have in my code before and improve the quality of my code. Under the functions/test directory, you can see the test code that I have written for the project.
+- RED: Write test codes and watch it fail.
+- GREEN: Write sufficient code for it to pass.
+- REFACTOR: Improve the current code.
 
-I have modified TDD to my purposes because I am not very confident with completely using the TDD Approach of **_RED GREEN REFACTOR_**.
+How I adopted TDD is as follows:
 
-1. RED -- Write test code and watch it fail
-2. GREEN -- Write enough code for the test to pass
-3. REFACTOR -- Improve the current code
+1. Think of ways that the backend code will fail. I used the **_BOUNDARY VALUE ANALYSIS_** approach for this.
+2. Write the test code and watch it fail.
 
-My approach for Test Driven Development is as follows:
+```js
+test("POST_0001: If no headers is provided, return 401", async () => {
+  const req = {};
+  const { status } = await postUserHandler(req);
+  expect(status).toBe(401);
+});
+```
 
-1. Think of the ways that the code will fail using the **_BOUNDARY VALUE ANALYSIS_** approach.
-2. Write code such that it will fail. For instance, I expect to have the uid parameter in the request headers. Therefore, I will write code that fails and stop.
+3. Finally, just write the code that makes this test passes.
 
 ```js
 if (!headers || !headers.uid) {
@@ -125,7 +134,24 @@ if (!headers || !headers.uid) {
 }
 ```
 
-Before I adopt this approach, I would have just extracted the uid through `const {uid} = headers`. However, there is also a possibility that the headers is null too, which will make the Server fail. However, after I have adopted this approach, I realised my mistake and make changes to it. After I have watched the test code passes, I will proceed with the next line.
+4. Repeat the process until I have finished writing the code.
+
+#### 2.2.1. HOW IT HELPED ME
+
+1. Marcus told me that the /home API logic did not work. At first, I thought it was the code issue so I went to have a look at the test and realised that everything is working fine. I went to perform manual testing and I realised that it was a bug in another endpoint. I am able to pinpoint the errors quickly with the correct tests.
+
+2. I am able to catch errors quickly. Previously, I would manually deploy. If the manual test fails, I will spend hours trying to debug it. After I have carried out TDD, the code does not have any more of these problems.
+
+3. I managed to catch bugs that I did not catch before. Previously, I would just destructure uid from the headers like below without considering whether headers itself is null. As a result, this might lead to unexpected errors. However, with TDD, I am able to catch these errors early.
+
+```js
+// If headers is null, then this will throw a 500 error.
+const { uid } = headers;
+```
+
+| Test Cases (To Date) | Code Coverage |
+| :------------------: | :-----------: |
+|          86          |      94%      |
 
 ### 2.2.1. INTEGRATION TESTING
 
