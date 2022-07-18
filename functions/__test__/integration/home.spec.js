@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll, vi } from "vitest";
 import { connectDatabase, closeDatabase } from "../db";
-import { getHomeRequest, Item } from "../../API/home";
+import { getHomeRequest, Item } from "../../API/home/handlers/get";
 
 describe("GET REQUEST", async () => {
   beforeAll(async () => {
