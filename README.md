@@ -111,8 +111,7 @@ This ensures that the staging and live database do not mix together when I devel
 
 In Section 1.6, we mentioned that we will be using MongoDB as our main form of database. MongoDB is the top 5 database in the world, and it is the best NoSQL database available as of the date of writing. How MongoDB stores information is in the format known as BSON or Binary JavaScript Object Notation. Here is an image of how our Database ENTITY RELATIONSHIP DIAGRAM looks like.
 
-![download](https://user-images.githubusercontent.com/88195289/180592215-ef6c5101-697c-4a8a-ba41-a21204673be8.png)
-
+![image](https://user-images.githubusercontent.com/88195289/180592276-142ad3cb-c0c2-4797-bff6-9492e99ea9e9.png)
 
 ### 2.1. GITHUB VERSION CONTROL
 
