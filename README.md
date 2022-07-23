@@ -123,11 +123,15 @@ Another reason why we use the MongoDB is due to its ease of carry out sharing. A
 
 I used GitHub as our application's main source of version control. However, I did not do feature branching because I do not see the need to. Unlike most groups, Marcus and I work separately on our own branches because we are in charge of different things. I am mainly in charge of server-side development while he is in-charge of the UIUX and Frontend development. Therefore, he will not understand my code and like-wise I do not understand his code. Nonetheless, we are following what is known as **_CONTINUOUS INTEGRATION_** which is the requirement for Artemis Team.
 
-According to Martin Fowler, a famous SWE Blogger from Thoughtworks and where our Advisor Viky came from, he mentions that "just because we run code after pushing to the main branch does not mean it is Continuous Integration". In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change." (David, 2022) Therefore, as part of the requirement of Orbital, I did not do feature branching and did Continuous Integration instead.
+According to Martin Fowler, a famous SWE Blogger from Thoughtworks and where our mentor Viky came from, he mentions that "just because we run code after pushing to the main branch does not mean it is Continuous Integration". In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change." (David, 2022) Therefore, as part of the requirement of Orbital, I did not do feature branching and did Continuous Integration instead.
 
-### 2.2. TEST DRIVEN DEVELOPMENT
+### 2.4. TESTING
 
-Initially, I that TDD was difficult because I am not confident with writing code. However, for this milestone itself, I have adopted and tweaked TDD and I was seriously blown away by the results. Not only does TDD help me catch all the bugs before I deploy it, it has improved the quality of my code. I am grateful to my advisor Viky for promoting this approach and which had led to a significant improvement from where I am after the 2nd milestone. I am not confident enough to fully write TDD, so I tweaked it to suit me. Nonetheless, it still follows the **_RED, GREEN, REFACTOR_** principles of TDD.
+Testing is an important part of a SWE journey. It ensures that our code coverage and quality is good. According to Google, 60% code coverage is considered acceptable, 75% is considered commendable and 90% is considered exemplary. However, we should not be obsessed with getting code coverage from 90% to 95%, but rather we should take concrete steps on increasing our code coverage from 30% to 70%. Based on the recommendations of Viky, since this is just a small project, I am using 90% as a benchmark meaning that any change to the code will have a high chance of failing any tests. Furthermore, we will be adopting the Test Pyramid that is recommdend by Viky and Martin Fowler, focusing mainly on the Unit Tests and Integration Tests rather than the Manual Tests.
+
+### 2.5. TEST DRIVEN DEVELOPMENT
+
+Initially, I thought that TDD was difficult because I am not confident with writing test codes. However, for this milestone itself, I have adopted and tweaked TDD and I was seriously blown away by the results. Not only does TDD help me catch all the bugs before I deploy it, it has improved the quality of my code. I am grateful to my mentor Viky for promoting this approach and which had led to a significant improvement from where I am after the 2nd milestone. I am not confident enough to fully write TDD, so I tweaked it to suit me. Nonetheless, it still follows the **_RED, GREEN, REFACTOR_** principles of TDD.
 
 - RED: Write test codes and watch it fail.
 - GREEN: Write sufficient code for it to pass.
@@ -156,7 +160,7 @@ if (!headers || !headers.uid) {
 
 4. Repeat the process until I have finished writing the code.
 
-#### 2.2.1. HOW IT HELPED ME
+#### 2.5.1. HOW IT HELPED ME
 
 1. Marcus told me that the /home API logic did not work. At first, I thought it was the code issue so I went to have a look at the test and realised that everything is working fine. I went to perform manual testing and I realised that it was a bug in another endpoint. I am able to pinpoint the errors quickly with the correct tests.
 
@@ -169,7 +173,7 @@ if (!headers || !headers.uid) {
 const { uid } = headers;
 ```
 
-### 2.2.2. INTEGRATION TESTING
+### 2.5.2. INTEGRATION TESTING
 
 Detractors of my argument might posit that we follow the test pyramid and carry out 70% unit tests, 20% integration tests and 10% of manual tests. However, I did a combination of both for the backend. For the validation of input such as whether the header or body is present, I did mainly unit tests. However, when the database logic is involved, I will use integration tests immediately.
 
@@ -218,5 +222,3 @@ For my code, there is not really a lot of cohesion involved but I have broken do
 4. Harvard CS75 Lecture 9: Scalability
 
 5. Educative.io: System Design Course
-
-## A SPECIAL THANKS TO THESE PEOPLE FOR GUIDING ME ON THE BACKEND JOURNEY FOR ORBITAL AND MY DEVELOPMENT JOURNEY
