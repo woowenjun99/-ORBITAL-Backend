@@ -2,7 +2,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|   10 min 30 seconds    | 2103 words |
+|    4 min 00 seconds    | 801 words  |
 
 ## TABLE OF CONTENTS
 
@@ -67,7 +67,7 @@ Here is where Cloud Computing comes in. Google Cloud Platform is a PAAS (Platfor
 
 It is best if we choose to use a combination of both horizontal and vertical scaling. Unfortunately, I am unsure how to implement such an architecture. Therefore, I will only be using pure vertical scaling for this project.
 
-#### 1.1.4. HOW HORIZONTAL SCALING WORKS
+#### 1.1.3. HOW HORIZONTAL SCALING WORKS (KNOWLEDGE SHARING)
 
 Supposed that we have many clients and a pool of servers. How do we distribute the workload such that it is even? If we have many servers, how do we keep track of their IP addresses? The solution to this would be to have a middleman who has a public IP address and able to distribute the workload. This middleman is known as a **_LOAD BALANCER_**. One of the ways that the load balancer can distribute the workload is through a method called **_ROUND ROBIN_** via BIND. This means that it will first pass the work to server 1, then server 2 and so on until it finishes allocating to all the servers. Following which, it will go back and allocate the work to server 1 again. There are several limitations to ROUND ROBIN:
 
@@ -75,13 +75,11 @@ Supposed that we have many clients and a pool of servers. How do we distribute t
 
 - Sessions might not work since we are constantly jumping from server to server.
 
-#### 1.1.5. DRAWBACKS WITH SERVER-LESS ARCHITECTURE
+#### 1.1.4. CHOICE OF DATABASE
 
-Scalability and performance are inversely related. Therefore, it is important for us to balance between both the scalability and performance.
+In terms of Scalability, NoSQL databases are more scalable as compared to their SQL counterparts. Therefore, we will be adopting a NoSQL for our project. The reason for why NoSQL Database is more scalable than their counterpart can be found here on StackOverflow.
 
-#### 1.1.6. DATABASE
-
-In terms of Scalability, NoSQL databases are more scalable as compared to their SQL counterparts. Therefore, we will be adopting a NoSQL for our project.
+https://stackoverflow.com/questions/8729779/why-nosql-is-better-at-scaling-out-than-rdbms
 
 ### 1.2. AVAILABILITY
 
@@ -89,18 +87,23 @@ Another parameter that we look out for when designing our system is the availabi
 
 #### 1.2.1. Google Cloud Platform
 
-Google Cloud Services is available in many regions around the world and is continuously expanding. In each region, there are 3 clusters (correct me if I am wrong) and within each clusters, there are zones. Therefore, if any of the data center goes down, we are able to redirect the request to a nearby zone or cluster to ensure that our services keep running. To ensure that our server is as closed to home as possible, I have also set the region to be the one for Singapore. This can be seen in my code.
+Google Cloud Services is available in many regions around the world and is continuously expanding. In each region, there are 3 clusters and within each clusters, there are zones. Therefore, if any of the data center goes down, we are able to redirect the request to a nearby zone or cluster to ensure that our services keep running. To ensure that our server is as closed to home as possible, I have also set the region to be the one for Singapore. This can be seen in my code.
 
 ```js
 exports.user = region("asia-southeast1").https.onRequest();
 ```
 
-### 1.6. Conclusion
+#### 1.3. RELIABILITY
 
-| Question # |           Question to ask           |                      Solution                       |
-| :--------: | :---------------------------------: | :-------------------------------------------------: |
-|     1      |     How many users do we have?      |                       100,000                       |
-|     2      | What if one of the servers crashed? | GCP can redirect the request to another zone for us |
+To ensure that our system is reliable, I have created a Sandbox environment for me to trial and test. This sandbox environment is customizable through the environment variables which can be found throughout the whole application, such as:
+
+```js
+if (!connection.readyState) {
+  connect(process.env.DB_URL, { dbName: process.env.DB_NAME });
+}
+```
+
+This ensures that the staging and live database do not mix together when I develop and test on my side. Furthermore, Google Cloud Platform stores Image Artifacts about the previous versions of the APIs. Therefore, I am able to restore them quickly if I have broken something in the previous release.
 
 ## 2. SOFTWARE ENGINEERING PRINCIPLES
 
