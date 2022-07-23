@@ -5,13 +5,14 @@
 |   10 min 30 seconds    | 2103 words |
 
 ## TABLE OF CONTENTS
+
 [SECTION 0: PREFACE](#PREFACE)
 
 [SECTION 1: SYSTEM DESIGN](#SYSTEM-DESIGN)
 
 ## SECTION 0: PREFACE <a name="PREFACE"></a>
 
-As of the time that I am writing this README for the Backend, it would have already been the 3rd milestone. If you have been following this journey with me, whether it is willingly or not, you might have notice that the README contents are continuously changing. This is because I am picking up new knowledge as I read more books and watch more videos. I did not learn any new technology for Orbital because technology can be easily learnt. Within this half a year of coding, I have learnt quite a lot of technology. During my internship, I know how to schedule cron jobs using Express Server, as well as carry out Automated Web Testing with Selenium IDE. For the SWE side, I have learnt VueJS, Flutter, ExpressJS and Google Cloud Functions. Therefore, during this Orbital, I have just picked up skills and knowledge that I have not learnt yet and integrate it into the project, including System Design, Testings and CI/CD. Therefore, I have just taken this opportunity during Orbital to mix and match the skills that I have picked up and read up on System Design, Testings and CI/CD and incorporate it into this project. Special thanks to the following people who have guided me during these 7 months: 
+As of the time that I am writing this README for the Backend, it would have already been the 3rd milestone. If you have been following this journey with me, whether it is willingly or not, you might have notice that the README contents are continuously changing. This is because I am picking up new knowledge as I read more books and watch more videos. I did not learn any new technology for Orbital because technology can be easily learnt. Within this half a year of coding, I have learnt quite a lot of technology. During my internship, I know how to schedule cron jobs using Express Server, as well as carry out Automated Web Testing with Selenium IDE. For the SWE side, I have learnt VueJS, Flutter, ExpressJS and Google Cloud Functions. Therefore, during this Orbital, I have just picked up skills and knowledge that I have not learnt yet and integrate it into the project, including System Design, Testings and CI/CD. Therefore, I have just taken this opportunity during Orbital to mix and match the skills that I have picked up and read up on System Design, Testings and CI/CD and incorporate it into this project. Special thanks to the following people who have guided me during these 7 months:
 
 1. Marcus Ong Qin Yuan : My partner for Orbital
 
@@ -39,34 +40,32 @@ As the saying goes, if you fail to plan, you plan to fail. There is no one-size-
 4. Maintainability
 5. Fault Tolerant
 
-### 1.1 SCALABILITY <a name="SCALABILITY"></a>
+### 1.1 SCALABILITY
 
-**Scalability** refers to the ability of our app to retain its performance when the workload increases. There are many ways that workload can increase, and these includes:
+**_SCALABILITY_** refers to the ability of our app to retain its performance when the workload increases. There are many ways that workload can increase, and these includes:
 
 1. Increase in client requests to the server
 2. Increase in the information being stored in the database.
 
+Often, scalability is inversely proportional to performance. Therefore, it is always up to the user to decide how to balance between the performance and scalability when trying to create a backend system for the application.
+
 #### 1.1.1. INTRODUCTION TO CLOUD COMPUTING
 
-Google Cloud Services are **_PAAS (Platform as a Service)_** while server architecture are **_IAAS (Infrastructure as a Service)_**. Before the era of Cloud Computing, there is only server infrastructure. This means that there are physical data centers with servers that manages the client's request. However, there are several problems with using a Server Architecture.
+Before the era of Cloud Computing, we are only able to scale vertically. This means that most of the client's request are handled by one or several computers which are known as servers. There are many issues with such an infrastructure. Here are some examples of the issues:
 
 - Supposed that we acquire an infrastructure and our application suddenly becomes popular. The load on the backend will spike. If the current infrastructure is unable to handle the sudden increase, we would need to acquire more infrastructure. This is known as **_PEAK LOAD PROVISIONING_**. It might be problematic if we are unable to acquire the infrastructure.
 
 - Great! So we just acquire more infrastructure in advance. However, on some days like the weekdays, the number of people using our application might not be that much. What happens to the infrastructure right now? These servers are just left around idling when no one is using them, wasting both resources and money.
 
-With the rise in Cloud Computing, we would only need to pay for what we use, which is much cheaper and affordable. We have adopted a server-less architecture because it is scalable and easy to use.
+Here is where Cloud Computing comes in. Google Cloud Platform is a PAAS (Platform-As-A-Service), this means that we will only use Google Cloud Platform when we need them, and we are paying for it when we use them. If we do not use them at all, we do not have to pay for them. This is great as Firebase Cloud Functions are free for the first 2 million invocations and I do not have to pay money to acquire an infrastructure for this project.
 
-#### 1.1.2. WHY GCP AND NOT AWS OR MICROSOFT AZURE?
+#### 1.1.2. TYPES OF SCALABILITY
 
-- I have experience in GCP Cloud Functions from my side job.
-
-- Google is powering their services with GCP itself. If millions of users can use Google Services like www.google.com without any issue, why should we doubt Google Services?
-
-#### 1.1.3. TYPES OF SCALABILITY
-
-- **_VERTICAL SCALING_** -- Having one or a few computers or servers to manage the load of the users. We can scale up by upgrading the CPU or RAMs but there is a limit to which we can upgrade.
+- **_VERTICAL SCALING_** -- Having one or a few computers or servers to manage the load of the users. We can scale up by adding resource to it, such as through upgrading the CPU or RAMs but there is a limit to which we can upgrade.
 
 - **_HORIZONTAL SCALING_** -- Having many computers or servers to manage the load of the users. These computers do not necessarily need to be as good as the computers used in VERTICAL SCALING.
+
+It is best if we choose to use a combination of both horizontal and vertical scaling. Unfortunately, I am unsure how to implement such an architecture. Therefore, I will only be using pure vertical scaling for this project.
 
 #### 1.1.4. HOW HORIZONTAL SCALING WORKS
 
@@ -206,4 +205,3 @@ For my code, there is not really a lot of cohesion involved but I have broken do
 5. Educative.io: System Design Course
 
 ## A SPECIAL THANKS TO THESE PEOPLE FOR GUIDING ME ON THE BACKEND JOURNEY FOR ORBITAL AND MY DEVELOPMENT JOURNEY
-
