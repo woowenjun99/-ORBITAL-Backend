@@ -5,30 +5,41 @@
 |   10 min 30 seconds    | 2103 words |
 
 ## TABLE OF CONTENTS
+[SECTION 0: PREFACE](#PREFACE)
 
-# PREFACE (1 minute read -- 200 words)
+[SECTION 1: SYSTEM DESIGN](#SYSTEM-DESIGN)
 
-As of the time that I am writing this README for the Backend, it would have already been the 3rd milestone. If you have been following this journey with me, whether it is willingly or not, you might have notice that the README contents are continuously changing. This is because I am picking up new knowledge as I read more books and watch more videos. I did not learn any new technology for Orbital because technology can be easily learnt. Within this half a year of coding, I have learnt quite a lot of technology. During my internship, I know how to schedule cron jobs using Express Server, as well as carry out Automated Web Testing with Selenium IDE. For the SWE side, I have learnt VueJS, Flutter, ExpressJS and Google Cloud Functions. Therefore, during this Orbital, I have just picked up skills and knowledge that I have not learnt yet and integrate it into the project, including System Design, Testings and CI/CD. Therefore, I have just taken this opportunity during Orbital to mix and match the skills that I have picked up and read up on System Design, Testings and CI/CD and incorporate it into this project.
+## SECTION 0: PREFACE <a name="PREFACE"></a>
 
-## 0. Introduction
+As of the time that I am writing this README for the Backend, it would have already been the 3rd milestone. If you have been following this journey with me, whether it is willingly or not, you might have notice that the README contents are continuously changing. This is because I am picking up new knowledge as I read more books and watch more videos. I did not learn any new technology for Orbital because technology can be easily learnt. Within this half a year of coding, I have learnt quite a lot of technology. During my internship, I know how to schedule cron jobs using Express Server, as well as carry out Automated Web Testing with Selenium IDE. For the SWE side, I have learnt VueJS, Flutter, ExpressJS and Google Cloud Functions. Therefore, during this Orbital, I have just picked up skills and knowledge that I have not learnt yet and integrate it into the project, including System Design, Testings and CI/CD. Therefore, I have just taken this opportunity during Orbital to mix and match the skills that I have picked up and read up on System Design, Testings and CI/CD and incorporate it into this project. Special thanks to the following people who have guided me during these 7 months: 
 
-To whoever is reading my GitHub repository, I happily welcome you here. My name is Wen Jun and I am the Backend Engineer for the application of the application Neigh. The following README will be broken down into the following sections:
+1. Marcus Ong Qin Yuan : My partner for Orbital
 
-1. System Design
-2. Software Engineering Principles
-3. Continuous Integration and Continuous Development.
+2. Viky: Our mentor for Orbital
 
-## 1. System Design
+3. Ni Jiaying: Our advisor for Orbital
 
-For our app, we will be using the 5 parameters to design our application. There is no-one-size-fits-all solution for designing a system, so there might be better alternatives. However, we will be justifying the use of the technology in this README based on the 5 parameters, as well as discussing the pros and cons.
+4. Nobel Ang: My Raffles Hall Backend lead
+
+5. Dianne Loh: CTO of VibeFam
+
+6. Andrew: VP of Technology of Vault Dragon Medical
+
+7. Joe: Senior Developer of Vault Dragon Medical
+
+8. Vu Van Dung: FE Developer for Ezkomment and my friend
+
+## 1. SYSTEM DESIGN <a name="SYSTEM-DESIGN"></a>
+
+As the saying goes, if you fail to plan, you plan to fail. There is no one-size-fits-all solution when it comes to designing a system. There might be alternatives to doing so. However, I will be justifying the use of technology that were used in this project in this section, sharing what I have learnt as well as discussing the pros and cons. When we talk about system design, we need to consider the following parameters:
 
 1. Scalability
 2. Availability
 3. Reliability
 4. Maintainability
-5. Fault-Tolerant
+5. Fault Tolerant
 
-### 1.1 SCALABILITY
+### 1.1 SCALABILITY <a name="SCALABILITY"></a>
 
 **Scalability** refers to the ability of our app to retain its performance when the workload increases. There are many ways that workload can increase, and these includes:
 
@@ -196,18 +207,3 @@ For my code, there is not really a lot of cohesion involved but I have broken do
 
 ## A SPECIAL THANKS TO THESE PEOPLE FOR GUIDING ME ON THE BACKEND JOURNEY FOR ORBITAL AND MY DEVELOPMENT JOURNEY
 
-1. Marcus Ong Qin Yuan : My partner for Orbital
-
-2. Viky: Our mentor for Orbital
-
-3. Ni Jiaying: Our advisor for Orbital
-
-4. Nobel Ang: My Raffles Hall Backend lead
-
-5. Dianne Loh: CTO of VibeFam
-
-6. Andrew: VP of Technology of Vault Dragon Medical
-
-7. Joe: Senior Developer of Vault Dragon Medical
-
-8. Vu Van Dung: FE Developer for Ezkomment and my friend
