@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { region } = require("firebase-functions");
-const { connect, connection, model, Types } = require("mongoose");
+const { connect, connection, model } = require("mongoose");
 const cors = require("cors")({ origin: true });
 const {
   userSchema,

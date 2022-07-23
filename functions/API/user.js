@@ -59,7 +59,7 @@ const putUserRequest = async ({ headers, body }) => {
         imageURL,
       });
 
-      await newUser.save();
+      await newUser.save({ validateBeforeSave: true });
       return { status: 201, message: newUser };
     }
 
@@ -69,7 +69,7 @@ const putUserRequest = async ({ headers, body }) => {
     foundUser.address = address;
     foundUser.birthday = birthday;
     foundUser.imageURL = imageURL;
-    await foundUser.save();
+    await foundUser.save({ validateBeforeSave: true });
 
     return { status: 201, message: foundUser };
   } catch (e) {

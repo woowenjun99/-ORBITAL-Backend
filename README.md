@@ -4,14 +4,11 @@
 | :--------------------: | :--------: |
 |   10 min 30 seconds    | 2103 words |
 
-At the point of writing this README, it would have been the 3rd milestone and you would have noticed that I make changes to my README multiple times. Needless to say, this is because I have picked up new knowledge along the way. Unlike many groups in Orbital,
-I do not learn new technology because technology can be easily learnt. As of date, I am able to do cron jobs, VueJS, Flutter Development, ExpressJS. I can also understand a bit of ReactJS code. However, the reason why I have not done any personal projects as of date is because I am busy. I work tirelessly for 7 days a week with the following commitments:
+## TABLE OF CONTENTS
 
-1. From Monday to Friday, I have internship which uses Vue2, Express and MongoDB.
-2. I have a side job in another start up.
-3. I have a NUS CCA which had already started work.
+# PREFACE (1 minute read -- 200 words)
 
-Therefore, I have just taken this opportunity during Orbital to mix and match the skills that I have picked up and read up on System Design, Testings and CI/CD and incorporate it into this project.
+As of the time that I am writing this README for the Backend, it would have already been the 3rd milestone. If you have been following this journey with me, whether it is willingly or not, you might have notice that the README contents are continuously changing. This is because I am picking up new knowledge as I read more books and watch more videos. I did not learn any new technology for Orbital because technology can be easily learnt. Within this half a year of coding, I have learnt quite a lot of technology. During my internship, I know how to schedule cron jobs using Express Server, as well as carry out Automated Web Testing with Selenium IDE. For the SWE side, I have learnt VueJS, Flutter, ExpressJS and Google Cloud Functions. Therefore, during this Orbital, I have just picked up skills and knowledge that I have not learnt yet and integrate it into the project, including System Design, Testings and CI/CD. Therefore, I have just taken this opportunity during Orbital to mix and match the skills that I have picked up and read up on System Design, Testings and CI/CD and incorporate it into this project.
 
 ## 0. Introduction
 

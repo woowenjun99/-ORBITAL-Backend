@@ -10,8 +10,11 @@ const User = new model("users", userSchema);
 
 const getListingsBasedOnStatus = async ({ status, uid }) => {
   try {
-    if (!status || !uid) {
-      return { status: 400, message: "Please provide status and uid in query." };
+    if (!uid) {
+      return {
+        status: 400,
+        message: "Please provide status and uid in query.",
+      };
     }
 
     let results;
@@ -58,7 +61,10 @@ const filterAndSearchRequest = async ({ search, tags }) => {
   if (!search && !tags) {
     return { status: 400, message: "Please provide a search query or tags." };
   } else if (Array.isArray(search)) {
-    return { status: 400, message: "Please do not provide multiple search queries" };
+    return {
+      status: 400,
+      message: "Please do not provide multiple search queries",
+    };
   }
 
   if (search) {
@@ -178,10 +184,9 @@ const postItemRequest = async ({ headers, body }) => {
         message:
           "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
       };
-    } else if (
-      body.typeOfTransaction !== RENT &&
-      body.typeOfTransaction !== SELL
-    ) {
+    }
+
+    if (body.typeOfTransaction !== RENT && body.typeOfTransaction !== SELL) {
       return {
         status: 400,
         message: "Invalid type of transaction.",
@@ -210,7 +215,7 @@ const postItemRequest = async ({ headers, body }) => {
       status: AVAILABLE,
     });
 
-    await item.save();
+    await item.save({ validateBeforeSave: true });
     return { status: 201, message: item };
   } catch ({ message }) {
     return { status: 500, message };
@@ -267,7 +272,7 @@ const putItemRequest = async ({ headers, body }) => {
     foundItem.deliveryInformation = deliveryInformation;
     foundItem.tags = tags;
     foundItem.imageURL = imageURL;
-    await foundItem.save();
+    await foundItem.save({ validateBeforeSave: true });
     return { status: 201, message: foundItem };
   } catch ({ message }) {
     return { status: 500, message };
