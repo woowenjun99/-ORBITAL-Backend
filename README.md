@@ -2,7 +2,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    4 min 00 seconds    | 801 words  |
+|    6 min 28 seconds    | 1294 words |
 
 ## TABLE OF CONTENTS
 
@@ -106,6 +106,10 @@ if (!connection.readyState) {
 This ensures that the staging and live database do not mix together when I develop and test on my side. Furthermore, Google Cloud Platform stores Image Artifacts about the previous versions of the APIs. Therefore, I am able to restore them quickly if I have broken something in the previous release.
 
 ## 2. SOFTWARE ENGINEERING PRINCIPLES
+
+### 2.1. DATABASE DESIGN
+
+In Section 1.6, we mentioned that we will be using MongoDB as our main form of database. MongoDB is the top 5 database in the world, and it is the best NoSQL database available as of the date of writing. How MongoDB stores information is in the format known as BSON or Binary JavaScript Object Notation. Here is an image of how our Database ENTITY RELATIONSHIP DIAGRAM looks like.
 
 ### 2.1. GITHUB VERSION CONTROL
 
