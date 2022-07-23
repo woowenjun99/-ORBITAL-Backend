@@ -111,6 +111,9 @@ This ensures that the staging and live database do not mix together when I devel
 
 In Section 1.6, we mentioned that we will be using MongoDB as our main form of database. MongoDB is the top 5 database in the world, and it is the best NoSQL database available as of the date of writing. How MongoDB stores information is in the format known as BSON or Binary JavaScript Object Notation. Here is an image of how our Database ENTITY RELATIONSHIP DIAGRAM looks like.
 
+![download](https://user-images.githubusercontent.com/88195289/180592215-ef6c5101-697c-4a8a-ba41-a21204673be8.png)
+
+
 ### 2.1. GITHUB VERSION CONTROL
 
 Similar to most groups, we used GitHub as our application's main source of version control. However, I did not do feature branching because I do not see the need to. Unlike most groups, Marcus and I work separately on our own branches because we are in charge of different things. I am mainly in charge of server-side development while he is in-charge of the UIUX and Frontend development. Therefore, he will not understand my code and like-wise I do not understand his code. Nonetheless, we are following what is known as **_CONTINUOUS INTEGRATION_** which is the requirement for Artemis Team.
