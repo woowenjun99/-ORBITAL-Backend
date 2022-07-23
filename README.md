@@ -2,7 +2,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    6 min 28 seconds    | 1294 words |
+|    6 min 51 seconds    | 1370 words |
 
 ## TABLE OF CONTENTS
 
@@ -111,11 +111,17 @@ This ensures that the staging and live database do not mix together when I devel
 
 In Section 1.6, we mentioned that we will be using MongoDB as our main form of database. MongoDB is the top 5 database in the world, and it is the best NoSQL database available as of the date of writing. How MongoDB stores information is in the format known as BSON or Binary JavaScript Object Notation. Here is an image of how our Database ENTITY RELATIONSHIP DIAGRAM looks like.
 
-![image](https://user-images.githubusercontent.com/88195289/180592276-142ad3cb-c0c2-4797-bff6-9492e99ea9e9.png)
+![image](https://user-images.githubusercontent.com/88195289/180592520-23d6916f-6859-4aa4-9cbd-4a6ce1e0fa1f.png)
 
-### 2.1. GITHUB VERSION CONTROL
+We use the **_ENTITY RELATIONSHIP DIAGRAM_** to highlight the relationships between each modal. For instance, we can tell from the ER Diagram that there is a one-to-many relationship between the user and the items as one person can have many items. Therefore, when we query for an item by their createdBy, we should expect a list of items to be returned. There are many more relationships present in this diagram but in view of the length of this README, I will not be mentioning all of them.
 
-Similar to most groups, we used GitHub as our application's main source of version control. However, I did not do feature branching because I do not see the need to. Unlike most groups, Marcus and I work separately on our own branches because we are in charge of different things. I am mainly in charge of server-side development while he is in-charge of the UIUX and Frontend development. Therefore, he will not understand my code and like-wise I do not understand his code. Nonetheless, we are following what is known as **_CONTINUOUS INTEGRATION_** which is the requirement for Artemis Team.
+### 2.2. DATABASE SHARDING
+
+Another reason why we use the MongoDB is due to its ease of carry out sharing. A database shard, or simply a shard, is a horizontal partition of data in a database or search engine. Each shard is held on a separate database server instance, to spread load. As seen in the code under 1.3, we are able to change the database name in the JavaScript Object with the value of dbName. We can create a different database for different countries if we were to expand into other countries. Therefore, MongoDB is scalable.
+
+### 2.3. GITHUB VERSION CONTROL
+
+I used GitHub as our application's main source of version control. However, I did not do feature branching because I do not see the need to. Unlike most groups, Marcus and I work separately on our own branches because we are in charge of different things. I am mainly in charge of server-side development while he is in-charge of the UIUX and Frontend development. Therefore, he will not understand my code and like-wise I do not understand his code. Nonetheless, we are following what is known as **_CONTINUOUS INTEGRATION_** which is the requirement for Artemis Team.
 
 According to Martin Fowler, a famous SWE Blogger from Thoughtworks and where our Advisor Viky came from, he mentions that "just because we run code after pushing to the main branch does not mean it is Continuous Integration". In fact, in Modern Software Engineering by David Farley, he posits that "Continuous Integration and Feature Branching are not compatible with each other. Continuous Integration seeks to expose change as early as possible while Feature Branching seeks to delay the change." (David, 2022) Therefore, as part of the requirement of Orbital, I did not do feature branching and did Continuous Integration instead.
 
