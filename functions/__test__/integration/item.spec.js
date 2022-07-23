@@ -30,7 +30,11 @@ describe("DELETE Request", () => {
   });
 
   test("ITEM_DELETE_0002: If the headers does not have the uid tag, return a 401 error", async () => {
-    const req = { method: "DELETE", body: { item_id: "Test Item 1" }, headers: {} };
+    const req = {
+      method: "DELETE",
+      body: { item_id: "Test Item 1" },
+      headers: {},
+    };
     const { status, message } = await deleteItemRequest(req);
     expect(status).toBe(401);
     expect(message).toBe("No Firebase UID provided.");
@@ -350,16 +354,7 @@ describe("GET Request", async () => {
       query: { type: "getListingsBasedOnStatus", uid: "123456" },
     };
     const { status, message } = await getItemRequest(req);
-    expect(message).toBe("Please provide status and uid in query.");
-  });
-
-  test("ITEM_GET_0019 (getUserItemBasedOnListing): If no status is provided, return 400.", async () => {
-    const req = {
-      method: "GET",
-      query: { type: "getListingsBasedOnStatus", uid: "123456" },
-    };
-    const { status, message } = await getItemRequest(req);
-    expect(message).toBe("Please provide status and uid in query.");
+    expect(message).toStrictEqual([]);
   });
 });
 
@@ -419,7 +414,7 @@ describe("POST REQUEST", () => {
     const { status, message } = await postItemRequest(req);
     expect(status).toBe(400);
     expect(message).toBe(
-      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation"
     );
   });
 
@@ -438,7 +433,7 @@ describe("POST REQUEST", () => {
     const { status, message } = await postItemRequest(req);
     expect(status).toBe(400);
     expect(message).toBe(
-      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation"
     );
   });
 
@@ -457,7 +452,7 @@ describe("POST REQUEST", () => {
     const { status, message } = await postItemRequest(req);
     expect(status).toBe(400);
     expect(message).toBe(
-      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation"
     );
   });
 
@@ -476,7 +471,7 @@ describe("POST REQUEST", () => {
     const { status, message } = await postItemRequest(req);
     expect(status).toBe(400);
     expect(message).toBe(
-      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation",
+      "Please check whether you input your name, description, typeOfTransaction and deliveryInformation"
     );
   });
 
@@ -643,7 +638,10 @@ describe("PUT REQUEST", () => {
 
   test("ITEM_PUT_0007: If an item is found but the createdBy is not the user, return 400", async () => {
     const user = new User({ uid: "123456" });
-    const item = new Item({ createdBy: "654321", _id: "62b7d1b7dd67e5f67cab0145" });
+    const item = new Item({
+      createdBy: "654321",
+      _id: "62b7d1b7dd67e5f67cab0145",
+    });
     await user.save();
     await item.save();
     const req = {

@@ -10,6 +10,8 @@
 
 [SECTION 1: SYSTEM DESIGN](#SYSTEM-DESIGN)
 
+[SECTION 2: SOFTWARE ENGINEERING PRINCIPLES](#SWE)
+
 ## SECTION 0: PREFACE <a name="PREFACE"></a>
 
 As of the time that I am writing this README for the Backend, it would have already been the 3rd milestone. If you have been following this journey with me, whether it is willingly or not, you might have notice that the README contents are continuously changing. This is because I am picking up new knowledge as I read more books and watch more videos. I did not learn any new technology for Orbital because technology can be easily learnt. Within this half a year of coding, I have learnt quite a lot of technology. During my internship, I know how to schedule cron jobs using Express Server, as well as carry out Automated Web Testing with Selenium IDE. For the SWE side, I have learnt VueJS, Flutter, ExpressJS and Google Cloud Functions. Therefore, during this Orbital, I have just picked up skills and knowledge that I have not learnt yet and integrate it into the project, including System Design, Testings and CI/CD. Therefore, I have just taken this opportunity during Orbital to mix and match the skills that I have picked up and read up on System Design, Testings and CI/CD and incorporate it into this project. Special thanks to the following people who have guided me during these 7 months:
@@ -105,7 +107,7 @@ if (!connection.readyState) {
 
 This ensures that the staging and live database do not mix together when I develop and test on my side. Furthermore, Google Cloud Platform stores Image Artifacts about the previous versions of the APIs. Therefore, I am able to restore them quickly if I have broken something in the previous release.
 
-## 2. SOFTWARE ENGINEERING PRINCIPLES
+## 2. SOFTWARE ENGINEERING PRINCIPLES <a name="SWE"></a>
 
 ### 2.1. DATABASE DESIGN
 
@@ -173,7 +175,7 @@ if (!headers || !headers.uid) {
 const { uid } = headers;
 ```
 
-### 2.5.2. INTEGRATION TESTING
+#### 2.5.2. INTEGRATION TESTING
 
 Detractors of my argument might posit that we follow the test pyramid and carry out 70% unit tests, 20% integration tests and 10% of manual tests. However, I did a combination of both for the backend. For the validation of input such as whether the header or body is present, I did mainly unit tests. However, when the database logic is involved, I will use integration tests immediately.
 
@@ -183,7 +185,7 @@ One thing that I really enjoy about MongoDB is that there is a package called Mo
 $ npm run test
 ```
 
-### 2.2.3. UNIT TESTING
+#### 2.5.3. UNIT TESTING
 
 The difference between Unit Testing and Integration Testing is that we do not involve any npm package libraries inside. This means that we will be doing mocks, spies and stubbing. The only 2 times that I did unit testings are as follows:
 
@@ -199,17 +201,23 @@ expect(status).toBe(500);
 
 2. The second time that I did Unit Testing was to determine whether the state is consistent if the database action fails and the transaction is aborted. As the code is longer, you might have to go to the test directory to take a look at it yourself.
 
-### 2.2.4. TEST STATISTICS
+#### 2.5.4. TEST STATISTICS
 
 | Test Cases (To Date) | Code Coverage |                                                                        Code Quality Badge                                                                         |
 | :------------------: | :-----------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|          86          |      94%      | [![codecov](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend/branch/main/graph/badge.svg?token=kM9iPdOLlW)](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend) |
+|          85          |      94%      | [![codecov](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend/branch/main/graph/badge.svg?token=kM9iPdOLlW)](https://codecov.io/gh/woowenjun99/-ORBITAL-Backend) |
 
-## 2.3. SINGLE RESPONSIBILITY PRINCIPLE
+### 2.6. SINGLE RESPONSIBILITY PRINCIPLE
 
 This principle was highly recommended by my advisor and I am really surprised by how simple this principle is and the software principles involved in it. **_SINGLE RESPONSIBILITY PRINCIPLE_** states that every software component should have one and only one responsibility or one reason to change. This principle actually brings in another 2 principles of SWE which are **_COUPLING_**, **_COHESION_** and **_MODULARITY_**.
 
 For my code, there is not really a lot of cohesion involved but I have broken down my code into smaller modules (or rather modularise it) so that they are loosely coupled and there is only one reason to change. I have separated out the DB Logic into another function so that there is only one reason to change -- If the database that I am using changes.
+
+## SECTION 3: CONTINUOUS INTEGRATION AND CONTINUOUS DEVELOPMENT
+
+As mentioned under Section 2.3, I carried out Continuous Integration by commiting to the main branch for my work. This allows the backend to be exposed to changes as early as possible, instead of isolating changes. Of course, many people might feel that I should not do so, but I am the only one working on the Backend, so why not do that?
+
+If you are looking for the CI code that is being executed, you can see it under .github/workflows directory. Everytime I push the commit to the main directory, I will run tests and send the test coverage to codecov, a 3rd party tool that is used to measure the code quality. Concurrently, I will attempt to deploy the code to the cloud. If any of these 2 GitHub actions fail, I will investigate the cause and try to remedy it.
 
 ## SOURCES:
 
