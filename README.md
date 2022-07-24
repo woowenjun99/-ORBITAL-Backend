@@ -109,6 +109,29 @@ if (!connection.readyState) {
 
 This ensures that the staging and live database do not mix together when I develop and test on my side. Furthermore, Google Cloud Platform stores Image Artifacts about the previous versions of the APIs. Therefore, I am able to restore them quickly if I have broken something in the previous release.
 
+#### 1.4. Calculations 
+
+Estimated Number of Users = 100,000
+
+**_ Transaction _**
+Average Transaction Document Size = 0.22 kb
+
+Estimated Number of Transactions a Day = 2000
+
+Writes in 1 Day: 2000 X 0.22 kb = 440 kb
+
+Writes in 1 Year = ~160.6 MB
+
+**_ User _**
+
+Average Item Size = 59 kb
+
+Estimated number of new items a day = 1000
+
+New Data Added a day: 1000 X 59 kb = 59 MB
+
+New Data Added a year: ~ 21 GB
+
 <img width="1960" alt="Untitled (1)" src="https://user-images.githubusercontent.com/88195289/180630195-32555797-a0fa-4fd0-a45c-b11d4cd30a6b.png">
 
 
