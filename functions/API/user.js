@@ -63,6 +63,7 @@ const putUserRequest = async ({ headers, body }) => {
       return { status: 201, message: newUser };
     }
 
+    foundUser.gender = gender;
     foundUser.name = name;
     foundUser.username = username;
     foundUser.postal = postal;
