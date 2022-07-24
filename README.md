@@ -109,6 +109,9 @@ if (!connection.readyState) {
 
 This ensures that the staging and live database do not mix together when I develop and test on my side. Furthermore, Google Cloud Platform stores Image Artifacts about the previous versions of the APIs. Therefore, I am able to restore them quickly if I have broken something in the previous release.
 
+<img width="1960" alt="Untitled (1)" src="https://user-images.githubusercontent.com/88195289/180630195-32555797-a0fa-4fd0-a45c-b11d4cd30a6b.png">
+
+
 ## 2. SOFTWARE ENGINEERING PRINCIPLES <a name="SWE"></a>
 
 ### 2.1. DATABASE DESIGN
