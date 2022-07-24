@@ -61,7 +61,9 @@ const postTransactionRequest = async ({ headers, body }) => {
       foundItem.offeredBy === uid;
 
     const readyForSale =
-      foundItem.typeOfTransaction === SELL && foundItem.status === AVAILABLE;
+      foundItem.typeOfTransaction === SELL &&
+      foundItem.status === OFFERED &&
+      foundItem.offeredBy === uid;
 
     if (!readyForRent && !readyForSale) {
       session.abortTransaction();
@@ -105,7 +107,7 @@ const postTransactionRequest = async ({ headers, body }) => {
 
     await foundItem.save({ session });
     await transaction.save({ session });
-    
+
     // 6. End the transaction
     session.commitTransaction();
     return { status: 201, message: foundItem };
