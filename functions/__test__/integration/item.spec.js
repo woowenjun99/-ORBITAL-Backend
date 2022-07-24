@@ -10,17 +10,11 @@ import { connectDatabase, clearDatabase, closeDatabase } from "../db";
 import { describe, test, expect, beforeAll, afterAll, afterEach } from "vitest";
 
 describe("DELETE Request", () => {
-  beforeAll(async () => {
-    await connectDatabase();
-  });
+  beforeAll(connectDatabase);
 
-  afterAll(async () => {
-    await closeDatabase();
-  });
+  afterAll(closeDatabase);
 
-  afterEach(async () => {
-    await clearDatabase();
-  });
+  afterEach(clearDatabase);
 
   test("ITEM_DELETE_0001: If no header is provided, return a 401 error", async () => {
     const req = { method: "DELETE", body: { item_id: "Test Item 1" } };
@@ -124,17 +118,11 @@ describe("DELETE Request", () => {
 });
 
 describe("GET Request", async () => {
-  beforeAll(async () => {
-    await connectDatabase();
-  });
+  beforeAll(connectDatabase);
 
-  afterAll(async () => {
-    await closeDatabase();
-  });
+  afterAll(closeDatabase);
 
-  afterEach(async () => {
-    await clearDatabase();
-  });
+  afterEach(clearDatabase);
 
   test("ITEM_GET_0001: If no query is provided, return a 400 error.", async () => {
     const req = { method: "GET" };
@@ -359,17 +347,11 @@ describe("GET Request", async () => {
 });
 
 describe("POST REQUEST", () => {
-  beforeAll(async () => {
-    await connectDatabase();
-  });
+  beforeAll(connectDatabase);
 
-  afterAll(async () => {
-    await closeDatabase();
-  });
+  afterAll(closeDatabase);
 
-  afterEach(async () => {
-    await clearDatabase();
-  });
+  afterEach(clearDatabase);
 
   test("ITEM_POST_0001: If no request headers is provided, return 401.", async () => {
     const req = { method: "POST" };

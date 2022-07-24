@@ -2,7 +2,7 @@ require("dotenv").config();
 const { connection, connect, model } = require("mongoose");
 const { itemSchema, userSchema } = require("../service/Schema");
 const { region } = require("firebase-functions");
-const { POST, AVAILABLE, RENT, RENTED, SOLD, OFFERED } = require("./types");
+const { POST, RENTED, OFFERED } = require("./types");
 const cors = require("cors")({ origin: true });
 const User = new model("users", userSchema);
 const Item = new model("items", itemSchema);
@@ -28,8 +28,6 @@ const postReservationRequest = async ({ headers, body }) => {
     const foundItem = await Item.findById(item_id);
     if (!foundItem) {
       return { status: 404, message: "No item found." };
-    } else if (foundItem.typeOfTransaction !== RENT) {
-      return { status: 400, message: "This item is for sale." };
     } else if (
       foundItem.status === RENTED ||
       (foundItem.status === OFFERED && foundItem.offeredBy !== uid)

@@ -2,7 +2,7 @@
 
 | Estimated Reading Time | Word Count |
 | :--------------------: | :--------: |
-|    6 min 51 seconds    | 1370 words |
+|   15 min 00 seconds    | 3000 words |
 
 ## TABLE OF CONTENTS
 
@@ -11,6 +11,8 @@
 [SECTION 1: SYSTEM DESIGN](#SYSTEM-DESIGN)
 
 [SECTION 2: SOFTWARE ENGINEERING PRINCIPLES](#SWE)
+
+[SECTION 3: CONTINUOUS INTEGRATION AND CONTINUOUS DEVELOPMENT](#CICD)
 
 ## SECTION 0: PREFACE <a name="PREFACE"></a>
 
@@ -213,7 +215,11 @@ This principle was highly recommended by my advisor and I am really surprised by
 
 For my code, there is not really a lot of cohesion involved but I have broken down my code into smaller modules (or rather modularise it) so that they are loosely coupled and there is only one reason to change. I have separated out the DB Logic into another function so that there is only one reason to change -- If the database that I am using changes.
 
-## SECTION 3: CONTINUOUS INTEGRATION AND CONTINUOUS DEVELOPMENT
+### 2.7. REST API
+
+We have adopted the conventional **_REPRESENTATIONAL STATE TRANSFER (REST)_** API for our project. This is evident from my folders and the following documentation, where I have adopted the conventional request methods such as GET, PUT, POST and DELETE. I did not adopt **_REMOTE PROCEDURE CALLS (RPC)_** as REST is more suitable for handling large quantity of data.
+
+## SECTION 3: CONTINUOUS INTEGRATION AND CONTINUOUS DEVELOPMENT <a name="CICD"></a>
 
 As mentioned under Section 2.3, I carried out Continuous Integration by commiting to the main branch for my work. This allows the backend to be exposed to changes as early as possible, instead of isolating changes. Of course, many people might feel that I should not do so, but I am the only one working on the Backend, so why not do that?
 

@@ -1,5 +1,13 @@
 import { postReservationRequest, User, Item } from "../../API/reservation";
-import { describe, test, expect, beforeAll, afterAll, afterEach, vi } from "vitest";
+import {
+  describe,
+  test,
+  expect,
+  beforeAll,
+  afterAll,
+  afterEach,
+  vi,
+} from "vitest";
 import { connectDatabase, clearDatabase, closeDatabase } from "../db";
 import { AVAILABLE, POST, RENT, RENTED, SELL, OFFERED } from "../../API/types";
 
@@ -7,17 +15,11 @@ const uid = "123456";
 const item_id = "62cd9bed402f1b79b13dd596";
 
 describe("POST TRANSACTION", () => {
-  beforeAll(async () => {
-    await connectDatabase();
-  });
+  beforeAll(connectDatabase);
 
-  afterEach(async () => {
-    await clearDatabase();
-  });
+  afterEach(clearDatabase);
 
-  afterAll(async () => {
-    await closeDatabase();
-  });
+  afterAll(closeDatabase);
 
   test("POST_0001: If the headers is not provided, return 401.", async () => {
     const req = { method: POST };
@@ -73,27 +75,7 @@ describe("POST TRANSACTION", () => {
     expect(status).toBe(404);
   });
 
-  test("POST_0007: If the item is for sale, return 400.", async () => {
-    const user = new User({
-      uid,
-    });
-    const item = new Item({
-      _id: item_id,
-      typeOfTransaction: SELL,
-    });
-    await item.save();
-    await user.save();
-    const req = {
-      method: POST,
-      headers: { uid },
-      body: { item_id },
-    };
-    const { status, message } = await postReservationRequest(req);
-    expect(message).toBe("This item is for sale.");
-    expect(status).toBe(400);
-  });
-
-  test("POST_0008: If the item is currently on RENTED, return 400.", async () => {
+  test("POST_0007: If the item is currently on RENTED, return 400.", async () => {
     const user = new User({
       uid,
     });
@@ -114,7 +96,7 @@ describe("POST TRANSACTION", () => {
     expect(status).toBe(400);
   });
 
-  test("POST_0009: If the item is currently on OFFERED, return 400.", async () => {
+  test("POST_0008: If the item is currently on OFFERED, return 400.", async () => {
     const user = new User({
       uid,
     });
@@ -135,7 +117,7 @@ describe("POST TRANSACTION", () => {
     expect(status).toBe(400);
   });
 
-  test("POST_0010: If the item is the user's, return 400.", async () => {
+  test("POST_0009: If the item is the user's, return 400.", async () => {
     const user = new User({
       uid,
     });
@@ -157,7 +139,7 @@ describe("POST TRANSACTION", () => {
     expect(status).toBe(400);
   });
 
-  test("POST_0011: If the item is already offered by the user's, return 400.", async () => {
+  test("POST_0010: If the item is already offered by the user's, return 400.", async () => {
     const user = new User({
       uid,
     });
@@ -180,7 +162,7 @@ describe("POST TRANSACTION", () => {
     expect(status).toBe(400);
   });
 
-  test("POST_0012: If the post request is successful, return 200", async () => {
+  test("POST_0011: If the post request is successful, return 200", async () => {
     const user = new User({
       uid,
     });
@@ -206,7 +188,7 @@ describe("POST TRANSACTION", () => {
     expect(offeredBy).toBe(uid);
   });
 
-  test("POST_0013: If the post request fails, return an error of 500.", async () => {
+  test("POST_0012: If the post request fails, return an error of 500.", async () => {
     vi.spyOn(User, "findOne").mockRejectedValueOnce({});
     const req = {
       method: POST,
