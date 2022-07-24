@@ -113,7 +113,7 @@ This ensures that the staging and live database do not mix together when I devel
 
 Estimated Number of Users = 100,000
 
-**_ Transaction _**
+##### Transaction
 Average Transaction Document Size = 0.22 kb
 
 Estimated Number of Transactions a Day = 2000
@@ -122,7 +122,7 @@ Writes in 1 Day: 2000 X 0.22 kb = 440 kb
 
 Writes in 1 Year = ~160.6 MB
 
-**_ User _**
+##### Users
 
 Average Item Size = 59 kb
 
